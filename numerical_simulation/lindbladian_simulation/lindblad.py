@@ -72,16 +72,32 @@ class LindbladSimulator:
             return np.append(tgrid, tgrid[::-1])  # reverse
         else:
             return tgrid
+        
+    def trace_out_ancilla(self, psi_t_batch, dice, num_batch, Ns, psi):
+        for ir in range(num_batch):  # sampling of the ancillary state
+            prob = la.norm(psi_t_batch[Ns:, ir]) ** 2
+            if dice[ir] <= prob:
+                # flip the |1>| state
+                psi[:, ir] = psi_t_batch[Ns:, ir]
+            else:
+                # keep the |0> state
+                psi[:, ir] = psi_t_batch[:Ns, ir]
+
+            # normalize
+            psi[:, ir] /= la.norm(psi[:, ir])
+        return psi
 
     def step_Lindblad(
-        self, psi, tau, num_t, num_segment, num_rep, S_s, M_s, dice, intorder
+        self, psi, psi_op, tau, num_t, num_segment, num_rep, S_s, M_s, dice, intorder
     ):
         """
         Propagate one step of the dilated jump operator in a batch.
         """
         num_batch = psi.shape[1]
+
         if not intorder in {1, 2}:
             raise ValueError("intorder must be 1 or 2.")
+        
         # Simulation preparation
         # first order method does not require reversing the grid
         isreverse = intorder > 1
@@ -104,32 +120,7 @@ class LindbladSimulator:
             (Ns_contour, 2 * Ns, num_rep), dtype=complex
         )  # local jump operator
         # for discrete integral point
-        # ---Construct local \widetilde{A}_l----
 
-        ###### Exponentiate Ktilde
-        K_tilde = np.zeros((2 * Ns, 2 * Ns), dtype=complex)
-        braket10 = np.array([[0, 0], [1, 0]])
-        braket01 = np.array([[0, 1], [0, 0]])
-
-        # extract the unitaries of the circuit
-        exp_Hs = []
-        for j in range(Ns_contour):
-            A_sl = (
-                la.expm(1j * s_contour[j] * self.H_op)
-                @ self.A_op
-                @ la.expm(-1j * s_contour[j] * self.H_op)
-            )
-            w_l = tau_s
-            if (j == 0) or (j == Ns_contour - 1):
-                w_l /= 2
-            H_sl = np.kron(braket01, F_contour[j].conj() * A_sl * w_l) + np.kron(
-                braket10, F_contour[j] * A_sl * w_l
-            )
-            K_tilde += H_sl
-
-            exp_Hs.append(la.expm(-1j * tau * H_sl)) # why was the exp_Hs calculated?
-
-        ######
         for i in range(Ns_contour):
             if (s_contour[i] == np.min(s_contour)) or (
                 s_contour[i] == np.max(s_contour)
@@ -143,7 +134,7 @@ class LindbladSimulator:
             #--------------------------------------------------------
             fac = np.exp(1j * np.angle(F_contour[i]))
             VF_contour[i, :, :] = (
-                1.0 / np.sqrt(2) * np.array([[1, -1], [fac, fac]])
+                1.0 / np.sqrt(2) * np.array([[1, 1], [fac, -fac]])
             )  # eigenvectors of σ_l
             if intorder == 1:  # first order
                 expZA = np.exp(
@@ -161,6 +152,11 @@ class LindbladSimulator:
         psi_t_batch = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
         psi_t_batch.fill(0j)
         psi_t_batch[:Ns, :] = psi
+
+        psi_t_batch_op = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
+        psi_t_batch_op.fill(0j)
+        psi_t_batch_op[:Ns, :] = psi_op
+
         ops = []  #  extract the unitaries of the circuit here
         for iseg in range(num_segment):
             if isreverse:  # second order
@@ -208,20 +204,28 @@ class LindbladSimulator:
                     )
                     ops.append(np.kron(np.identity(2), self.eHT.conj().T))
                     ops.append(np.kron(np.identity(2), self.eHT.conj().T))
-                    ops.append(["r"])
-        for ir in range(num_batch):  # sampling of the ancillary state
-            prob = la.norm(psi_t_batch[Ns:, ir]) ** 2
-            if dice[ir] <= prob:
-                # flip the |1>| state
-                psi[:, ir] = psi_t_batch[Ns:, ir]
-            else:
-                # keep the |0> state
-                psi[:, ir] = psi_t_batch[:Ns, ir]
+                    # ops.append(["r"])
 
-            # normalize
-            psi[:, ir] /= la.norm(psi[:, ir])
+                overall_matrix_algorithm = reduce(lambda a, b: a @ b, reversed(ops))
 
-        return psi, ops
+                psi_t_batch_op = overall_matrix_algorithm @ psi_t_batch_op
+        
+        psi_without_op = self.trace_out_ancilla(psi_t_batch, dice, num_batch, Ns, psi)
+        psi_all_op = self.trace_out_ancilla(psi_t_batch_op, dice, num_batch, Ns, psi_op)
+
+        # for ir in range(num_batch):  # sampling of the ancillary state
+        #     prob = la.norm(psi_t_batch[Ns:, ir]) ** 2
+        #     if dice[ir] <= prob:
+        #         # flip the |1>| state
+        #         psi[:, ir] = psi_t_batch[Ns:, ir]
+        #     else:
+        #         # keep the |0> state
+        #         psi[:, ir] = psi_t_batch[:Ns, ir]
+
+        #     # normalize
+        #     psi[:, ir] /= la.norm(psi[:, ir])
+
+        return psi_without_op, psi_all_op, ops
 
     def Lindblad_simulation(
         self, T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS=[], intorder=2
@@ -236,7 +240,9 @@ class LindbladSimulator:
         all_gates = (
             []
         )  # extract the unitaries here of the full circuit, (e^-iHt/T e^-iKt/T)^T
+
         H = self.H_op #shape=(16, 16)
+
         # Simulation parameter
         tau = T / num_t # T= 80, num_t = 80
         time_series = np.arange(num_t + 1) * tau # [0., 1., 2., ..., 80.]
@@ -249,38 +255,58 @@ class LindbladSimulator:
         self.E_A, self.psi_A = la.eigh(
             self.A_op
         )  # diagonalize A for later implementation
+
         # Output Storage
         time_H = np.zeros(num_t + 1)  # List of total Hamiltonian simulation time zeros [0, 1, 2, ..., 80]
+
+        avg_energy_hist_op = np.zeros((num_t + 1, num_rep)) # shape is (81, 1)
+        avg_energy_hist_op[0, :].fill(np.vdot(psi0, H @ psi0).real)  # List of energy
+
         avg_energy_hist = np.zeros((num_t + 1, num_rep)) # shape is (81, 1)
         avg_energy_hist[0, :].fill(np.vdot(psi0, H @ psi0).real)  # List of energy
+
         avg_pGS_hist = np.zeros(
             (num_t + 1, num_rep)
         )  # List of overlap with ground state
+
         if len(psi_GS) == 0:
             psi_GS = np.zeros_like(psi0)
+
         avg_pGS_hist[0, :].fill(np.abs(np.vdot(psi0, psi_GS)) ** 2)  # initial overlap
+
+        avg_pGS_hist_op = np.zeros(
+            (num_t + 1, num_rep)
+        )  # List of overlap with ground state
+
+        avg_pGS_hist_op[0, :].fill(np.abs(np.vdot(psi0, psi_GS)) ** 2)  # initial overlap
+
         # this randomness is introduced for modeling the tracing out
         # operation. Cannot be derandomized.
         np.random.seed(seed=1)
         flip_dice = np.random.rand(
             num_t, num_rep
         )  # used for simulating tracing out in quantum circuit shape=(80, 1)
+
         rho_hist = np.zeros((Ns, Ns, num_t + 1), dtype=complex)  # \rho_n Ns=16, num_t=80 shape=(16, 16, 81)
         psi_all = np.zeros((Ns, num_rep), dtype=complex)  # List of psi_n Ns=16, num_rep=1 shape=(16, 1)
+        psi_all_ops = np.zeros((Ns, num_rep), dtype=complex)
+
         for i in range(num_rep):
-            # why this was applied ??????
-            psi_all[:, i] = self.eHT.conj().T @ psi0.copy()
-            all_gates.append(np.kron(np.identity(2), self.eHT.conj().T))
+            psi_all[:, i] = psi0.copy()
+            psi_all_ops[:, i] = psi0.copy()
+
         rho_hist[:, :, 0] = np.outer(psi_all[:, 0], psi_all[:, 0].conj().T)
-        # example = np.array([[[1,2,3,4],[5,6,7,8]],[[9,10,11,12],[13,14,15,16]]])
-        # print(example)
-        # print(example[:,:,0],"<-- example shape")
+       
         for it in range(num_t):
             psi_all = eHtau @ psi_all
             all_gates.append(np.kron(np.identity(2), eHtau))
-            time_H[it + 1] = time_H[it] + tau #???? tau= 1
-            psi_all, ops = self.step_Lindblad(
+
+            psi_all_ops = eHtau @ psi_all_ops
+
+            time_H[it + 1] = time_H[it] + tau
+            psi_all, psi_all_ops, ops = self.step_Lindblad(
                 psi_all,
+                psi_all_ops,
                 tau,
                 num_t,
                 num_segment,
@@ -290,7 +316,7 @@ class LindbladSimulator:
                 flip_dice[it, :],
                 1,
             )
-            all_gates.extend(ops)
+            all_gates.append(ops)
             rho_hist[:, :, it + 1] = (
                 np.einsum("in,jn->ij", psi_all, psi_all.conj()) / num_rep
             )  # taking average to get \rho_n
@@ -304,6 +330,16 @@ class LindbladSimulator:
             avg_pGS_hist[it + 1, :] = (
                 np.abs(np.einsum("in,i->n", psi_all.conj(), psi_GS)) ** 2
             )  # Calculating overlap
+
+            avg_energy_hist_op[it + 1, :] = np.einsum(
+                "in,in->n", psi_all_ops.conj(), H @ psi_all_ops
+            ).real  # Calculating energy
+            avg_pGS_hist_op[it + 1, :] = (
+                np.abs(np.einsum("in,i->n", psi_all_ops.conj(), psi_GS)) ** 2
+            )  # Calculating overlap
         avg_energy = np.mean(avg_energy_hist, axis=1)
         avg_pGS = np.mean(avg_pGS_hist, axis=1)
-        return time_series, avg_energy, avg_pGS, time_H, rho_hist, all_gates
+
+        avg_energy_op = np.mean(avg_energy_hist_op, axis=1)
+        avg_pGS_op = np.mean(avg_pGS_hist_op, axis=1)
+        return time_series, avg_energy, avg_pGS, avg_energy_op, avg_pGS_op, time_H, rho_hist, all_gates

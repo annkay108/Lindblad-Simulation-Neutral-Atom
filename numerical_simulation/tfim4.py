@@ -35,8 +35,10 @@ g = 1.2  # z magnetic field strength
 # site-coupling lists (PBC for both spin inversion sectors)
 h_field = [[-g, i] for i in range(L)]
 print(h_field,"<-- h_field")
+
 J_zz = [[-J, i, i + 1] for i in range(L - 1)]  # no PBC
 print(J_zz,"<-- J_zz")
+
 # define spin static and dynamic lists
 static = [["zz", J_zz], ["x", h_field]]  # static part of H
 dynamic = []  # time-dependent part of H
@@ -52,11 +54,14 @@ H = hamiltonian(static, dynamic, basis=spin_basis, dtype=np.float64, **no_checks
 E_GS, psi_GS = H.eigsh(k=1, which="SA") # calculate the ground state so eigenvalue and corresponding eigenvector
 psi_GS = psi_GS.flatten()
 print("E_GS = ", E_GS)
+
 H_mat = np.array(H.todense())
 E_H, psi_H = la.eigh(H_mat) # calculate the full spectrum of H meaning all the eigenvalues and eigenvectors
 print("E_H = ", E_H)
+
 gap = E_H[1] - E_H[0]
 print("gap = ", gap)
+
 a = 2.5 * la.norm(H_mat, 2)
 da = 0.5 * la.norm(H_mat, 2)
 b = gap
@@ -98,24 +103,42 @@ S_s = 5.0 / db  # Integral truncation
 M_s = int(5 / db / (2 * np.pi / (4 * a)))  # Integral stepsize
 num_segment = 1  # discrete segment
 num_rep = 1  # average repetition (used to recover \rho_n after tracing out)
-times_l, avg_energy_l, avg_pGS_l, time_H_l, rho_all_l, all_gates = (
+times_l, avg_energy_l, avg_pGS_l, avg_energy_l_op, avg_pGS_l_op, time_H_l, rho_all_l, all_gates = (
     lb.Lindblad_simulation(
         T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS, intorder=2
     )
 )
 
+# num_segment = 2  # discrete segment
+# num_rep = 1  # average repetition (used to recover \rho_n after tracing out)
+# times_l2, avg_energy_l2, avg_pGS_l2, time_H_l2, rho_all_l2, all_gates2 = (
+#     lb.Lindblad_simulation(
+#         T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS, intorder=2
+#     )
+# )
+
+#===================================================================================================
 plt.figure(figsize=(12, 10))
 plt.plot(
     times, avg_energy_e, "g-", label="Lindblad (exact)", linewidth=3, markersize=10
 )
 plt.plot(
     times_l,
-    avg_energy_l,
-    "r--",
-    label=r"Lindblad $(\tau=0.5,r=2)$",
+    avg_energy_l_op,
+    "b--",
+    label=r"Lindblad $(\tau=1,r=2)$",
     linewidth=1.5,
     markersize=10,
 )
+plt.plot(
+    times_l,
+    avg_energy_l,
+    "r--",
+    label=r"Lindblad $(\tau=1,r=1)$",
+    linewidth=1.5,
+    markersize=10,
+)
+
 plt.plot(
     times,
     np.ones_like(times) * E_GS,
@@ -132,13 +155,22 @@ plt.yticks(fontsize=25)
 plt.legend(fontsize=30)
 plt.show()
 
+#===================================================================================================
 plt.figure(figsize=(12, 10))
 plt.plot(times, avg_pGS_e, "g-", label=r"Lindblad (exact)", linewidth=3, markersize=20)
 plt.plot(
     times_l,
+    avg_pGS_l_op,
+    "b--",
+    label=r"Lindblad $(\tau=1,r=2)$",
+    linewidth=1.5,
+    markersize=10,
+)
+plt.plot(
+    times_l,
     avg_pGS_l,
     "r--",
-    label=r"Lindblad $(\tau=0.5,r=2)$",
+    label=r"Lindblad $(\tau=1,r=1)$",
     linewidth=1.5,
     markersize=10,
 )
