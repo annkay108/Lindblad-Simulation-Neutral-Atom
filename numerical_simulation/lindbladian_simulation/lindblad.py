@@ -5,6 +5,7 @@ from scipy.special import erf
 from numpy import pi
 import pickle
 import os
+from pathlib import Path
 
 class LindbladSimulator:
     def __init__(self, H_op, A_op, filter_params):
@@ -86,6 +87,12 @@ class LindbladSimulator:
             # normalize
             psi[:, ir] /= la.norm(psi[:, ir])
         return psi
+    
+    def save_operator(self, ops):
+        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators.pickle"
+        if not os.path.exists(path):
+            with open(path, "wb") as f:
+                pickle.dump(ops, f)
 
     def step_Lindblad(
         self, psi, psi_op, tau, num_t, num_segment, num_rep, S_s, M_s, dice, intorder
@@ -225,10 +232,10 @@ class LindbladSimulator:
         #     # normalize
         #     psi[:, ir] /= la.norm(psi[:, ir])
 
-        return psi_without_op, psi_all_op, ops
+        return psi_without_op, psi_all_op, overall_matrix_algorithm
 
     def Lindblad_simulation(
-        self, T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS=[], intorder=2
+        self, T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS=[], intorder=2, flip_dice=[]
     ):
         """
         Lindblad simulation
@@ -282,10 +289,7 @@ class LindbladSimulator:
 
         # this randomness is introduced for modeling the tracing out
         # operation. Cannot be derandomized.
-        np.random.seed(seed=1)
-        flip_dice = np.random.rand(
-            num_t, num_rep
-        )  # used for simulating tracing out in quantum circuit shape=(80, 1)
+
 
         rho_hist = np.zeros((Ns, Ns, num_t + 1), dtype=complex)  # \rho_n Ns=16, num_t=80 shape=(16, 16, 81)
         psi_all = np.zeros((Ns, num_rep), dtype=complex)  # List of psi_n Ns=16, num_rep=1 shape=(16, 1)
@@ -337,9 +341,13 @@ class LindbladSimulator:
             avg_pGS_hist_op[it + 1, :] = (
                 np.abs(np.einsum("in,i->n", psi_all_ops.conj(), psi_GS)) ** 2
             )  # Calculating overlap
+
+        self.save_operator(all_gates)
         avg_energy = np.mean(avg_energy_hist, axis=1)
         avg_pGS = np.mean(avg_pGS_hist, axis=1)
 
+
         avg_energy_op = np.mean(avg_energy_hist_op, axis=1)
         avg_pGS_op = np.mean(avg_pGS_hist_op, axis=1)
+        print("Final energy (operator method): ", avg_pGS_hist[3])
         return time_series, avg_energy, avg_pGS, avg_energy_op, avg_pGS_op, time_H, rho_hist, all_gates
