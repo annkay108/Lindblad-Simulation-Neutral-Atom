@@ -45,15 +45,15 @@ spin_basis = spin_basis_1d(L=L)
 # build TFIM-4 Hamiltonians
 no_checks = dict(check_pcon=False, check_symm=False, check_herm=False)
 
-H = hamiltonian(static, dynamic, basis=spin_basis, dtype=np.float64, **no_checks)
+Hamiltonian_quspin = hamiltonian(static, dynamic, basis=spin_basis, dtype=np.float64, **no_checks)
 
 
 # calculate spin energy levels
-E_GS, psi_GS = H.eigsh(k=1, which="SA") # calculate the ground state so eigenvalue and corresponding eigenvector
+E_GS, psi_GS = Hamiltonian_quspin.eigsh(k=1, which="SA") # calculate the ground state so eigenvalue and corresponding eigenvector
 psi_GS = psi_GS.flatten()
-# print("E_GS = ", E_GS)
+print("E_GS = ", E_GS)
 
-H_mat = np.array(H.todense())
+H_mat = np.array(Hamiltonian_quspin.todense())
 E_H, psi_H = la.eigh(H_mat) # calculate the full spectrum of H meaning all the eigenvalues and eigenvectors
 # print("E_H = ", E_H)
 
@@ -129,14 +129,14 @@ plt.figure(figsize=(12, 10))
 plt.plot(
     times, avg_energy_e, "g-", label="Lindblad (exact)", linewidth=3, markersize=10
 )
-plt.plot(
-    times_l,
-    avg_energy_l_op,
-    "b--",
-    label=r"Lindblad $(\tau=1,r=2)$",
-    linewidth=1.5,
-    markersize=10,
-)
+# plt.plot(
+#     times_l,
+#     avg_energy_l_op,
+#     "b--",
+#     label=r"Lindblad $(\tau=1,r=2)$",
+#     linewidth=1.5,
+#     markersize=10,
+# )
 plt.plot(
     times_l,
     avg_energy_l,
@@ -165,14 +165,14 @@ plt.show()
 #===================================================================================================
 plt.figure(figsize=(12, 10))
 plt.plot(times, avg_pGS_e, "g-", label=r"Lindblad (exact)", linewidth=3, markersize=20)
-plt.plot(
-    times_l,
-    avg_pGS_l_op,
-    "b--",
-    label=r"Lindblad $(\tau=1,r=2)$ operator",
-    linewidth=1.5,
-    markersize=10,
-)
+# plt.plot(
+#     times_l,
+#     avg_pGS_l_op,
+#     "b--",
+#     label=r"Lindblad $(\tau=1,r=1)$ operator",
+#     linewidth=1.5,
+#     markersize=10,
+# )
 plt.plot(
     times_l,
     avg_pGS_l,
@@ -185,7 +185,7 @@ plt.plot(
     times_l,
     fidelity_list,
     "y--",
-    # marker="o",
+    marker="o",
     label=r"Lindblad Operator Simulation unitary",
     linewidth=1.5,
     markersize=10,

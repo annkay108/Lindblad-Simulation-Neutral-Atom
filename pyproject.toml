@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.3.4",
+    "pennylane>=0.43.1",
     "qiskit>=2.2.2",
     "quspin>=1.0.0",
     "qutip>=5.2.1",
