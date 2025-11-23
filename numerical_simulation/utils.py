@@ -2,6 +2,15 @@ import numpy as np
 import pennylane as qml
 from quspin.basis import spin_basis_1d
 from quspin.operators import hamiltonian  # Hamiltonians and operators
+from pathlib import Path
+
+def load_unitary_matrices():
+    path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators.pickle"
+    dilated_unitary = np.load(path, allow_pickle=True)
+
+    n_qubits = int(np.log2(dilated_unitary[0].shape[0]))
+
+    return dilated_unitary, n_qubits
 
 def tmif4_hamiltonian_pauli(L=4, J=1.0, g=1.2):
     # site-coupling lists (PBC for both spin inversion sectors)
@@ -19,20 +28,20 @@ def tmif4_hamiltonian_pauli(L=4, J=1.0, g=1.2):
     no_checks = dict(check_pcon=False, check_symm=False, check_herm=False)
     Hamiltonian_quspin = hamiltonian(static, dynamic, basis=spin_basis, dtype=np.float64, **no_checks)
 
-    # Add the Pauli terms from H_total
-    hamiltonian_terms = []
-    
-    # Add the "zz" terms
-    for i in range(L - 1):
-        hamiltonian_terms.append(-J * qml.PauliZ(i+1) @ qml.PauliZ(i + 2))
-    
-    # Add the "x" terms
-    for i in range(L):
-        hamiltonian_terms.append(-g * qml.PauliX(i+1))
-    
-    # Combine all terms of the Hamiltonian
-    H_total = qml.Hamiltonian([1],[sum(hamiltonian_terms)])
+    coeffs = []
+    ops = []
 
+    # ZZ interactions on (1,2), (2,3), (3,4)
+    for i in range(L - 1):
+        coeffs.append(-J)
+        ops.append(qml.PauliZ(i + 1) @ qml.PauliZ(i + 2))
+
+    # X terms on wires (1,2,3,4)
+    for i in range(L):
+        coeffs.append(-g)
+        ops.append(qml.PauliX(i + 1))
+
+    H_total = qml.Hamiltonian(coeffs, ops)
     
     return Hamiltonian_quspin, H_total
 
