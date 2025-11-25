@@ -59,14 +59,11 @@ def compare_ground_state():
     print(f"Ground state energy from H_mat: {E_GS_mat[0]}")
     print(f"Ground state energy from H_total (Pauli form): {E_GS_total}")
     
-    # Optionally, you can compare wavefunctions if needed. 
-    # For simplicity, here we just compare the energies.
     if np.isclose(E_GS_mat[0], E_GS_total):
         print("The ground state energies are the same.")
     else:
         print("The ground state energies are different.")
     
-    # If you want to compare wavefunctions, you could check the overlap (cosine similarity) between psi_GS_mat and the computed ground state from PennyLane
     return E_GS_mat, E_GS_total
 
 compare_ground_state()

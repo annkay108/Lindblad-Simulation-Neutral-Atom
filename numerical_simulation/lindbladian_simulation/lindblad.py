@@ -220,18 +220,6 @@ class LindbladSimulator:
         psi_without_op = self.trace_out_ancilla(psi_t_batch, dice, num_batch, Ns, psi)
         psi_all_op = self.trace_out_ancilla(psi_t_batch_op, dice, num_batch, Ns, psi_op)
 
-        # for ir in range(num_batch):  # sampling of the ancillary state
-        #     prob = la.norm(psi_t_batch[Ns:, ir]) ** 2
-        #     if dice[ir] <= prob:
-        #         # flip the |1>| state
-        #         psi[:, ir] = psi_t_batch[Ns:, ir]
-        #     else:
-        #         # keep the |0> state
-        #         psi[:, ir] = psi_t_batch[:Ns, ir]
-
-        #     # normalize
-        #     psi[:, ir] /= la.norm(psi[:, ir])
-
         return psi_without_op, psi_all_op, overall_matrix_algorithm
 
     def Lindblad_simulation(
