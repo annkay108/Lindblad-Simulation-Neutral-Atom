@@ -66,4 +66,5 @@ def compare_ground_state():
     
     return E_GS_mat, E_GS_total
 
-compare_ground_state()
+if __name__ == "__main__":
+    compare_ground_state()
