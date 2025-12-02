@@ -1,17 +1,29 @@
+import json
+import os
+from time import time
 import numpy as np
 import pennylane as qml
 from pathlib import Path
 import utils
 
-def generate_pennylane_circuit_from_unitary():
-    no_of_iterations = 23 # for 23 steps ground -5.002728873837382
+def run_single_experiment(no_of_iterations, max_bond_dim):
+    # for 23 steps ground -5.002728873837382
     dilated_unitary, n_qubits = utils.load_unitary_matrices()
 
     total_qubits = n_qubits + no_of_iterations
 
     hamiltonian_quspin, H_total = utils.tmif4_hamiltonian_pauli()
 
-    dev = qml.device('default.qubit', wires=total_qubits)
+    kwargs_mps = {
+        # Maximum bond dimension of the MPS
+        "max_bond_dim": max_bond_dim,
+        # Cutoff parameter for the singular value decomposition
+        "cutoff": np.finfo(np.complex128).eps,
+        # Contraction strategy to apply gates
+        "contract": "auto-mps",
+    }
+
+    dev = qml.device('default.tensor', method="mps", **kwargs_mps)
 
     @qml.qnode(dev)
     def circuit():
@@ -27,8 +39,41 @@ def generate_pennylane_circuit_from_unitary():
         return qml.expval(H_total)
 
     # print(qml.draw(circuit)())
-    result = circuit()
-    return result
+    startTime = time()
+    energy = circuit()
+    endTime = time()
 
-print(generate_pennylane_circuit_from_unitary())
+    exect_time = endTime - startTime
+    return {
+        "iterations": no_of_iterations,
+        "max_bond_dim": max_bond_dim,
+        "execution_time": exect_time,
+        "energy": energy,
+    }
 
+def run_experiments(iterations_list, bond_dim_list):
+    results = []
+    for no_of_iterations in iterations_list:
+        for max_bond_dim in bond_dim_list:
+            result = run_single_experiment(no_of_iterations, max_bond_dim)
+            print(result," completed.")
+            results.append(result)
+    return results
+
+def save_results(results, filename="results"):
+    os.makedirs("data", exist_ok=True)
+
+    json_path = Path("data") / f"{filename}.json"
+    with open(json_path, "w") as f:
+        json.dump(results, f, indent=4)
+    print(f"Results saved to {json_path}...")
+
+if __name__ == "__main__":
+    iterations_list = [5, 10, 15, 20, 23, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
+    bond_dim_list = [50, 100, 400, 450, 500]
+
+    results = run_experiments(iterations_list, bond_dim_list)
+    save_results(results, filename="mps_gate_implementation_results_2")
+
+
+    
