@@ -6,7 +6,7 @@ import utils
 
 
 def generate_pennylane_circuit_from_unitary():
-    no_of_iterations = 20  #-5.01500273878082 for 24 steps 1254 seconds
+    no_of_iterations = 3 #-5.01500273878082 for 24 steps 1254 seconds
     dilated_unitary, n_qubits = utils.load_unitary_matrices()
 
     total_qubits = n_qubits + no_of_iterations
@@ -35,12 +35,6 @@ def generate_pennylane_circuit_from_unitary():
     print(f"Circuit reset execution time: {end_time - start_time} seconds for {no_of_iterations} iterations \n Reset result: {result} \n")
 
     print(qml.draw(circuit)())
-
-    # start_time_post = time.time()
-    # result = circuit(postselect=0)
-    # end_time_post = time.time()
-    # print(f"Circuit postselect execution time: {end_time_post - start_time_post} seconds for {no_of_iterations} iterations \n Postselect result: {result}")
-
 
 generate_pennylane_circuit_from_unitary()
 

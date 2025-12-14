@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "bloqade-shuttle>=0.8.3",
+    "matplotlib>=3.10.7",
     "mqt-core>=3.3.3",
     "mqt-qmap>=3.4.0",
     "numpy>=2.3.4",

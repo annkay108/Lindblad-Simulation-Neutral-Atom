@@ -4,8 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-DATA_FILE = "data/mps_gate_implementation_results_2.json"
-SAVE_PLOTS = True
+DATA_FILE = "data/mps_gate_implementation_results_4.json"
+SAVE_PLOTS = False
 PLOT_DIR = "plots"
 TRUE_ENERGY = -5.4315195827374945
 
@@ -93,6 +93,21 @@ plt.xlabel("Max Bond Dimension")
 plt.ylabel("Iterations")
 save(fig, "runtime_heatmap.png")
 plt.show()
+
+# --------------------------------------
+# Plot 6: Energy vs Bond Dimension
+# --------------------------------------
+
+# fig = plt.figure(figsize=(8,6))
+# sns.lineplot(data=df, x="max_bond_dim", y="energy", hue="iterations", marker="o")
+# plt.axhline(TRUE_ENERGY, color="red", linestyle="--", label="True Ground State")
+# plt.title("Energy vs Max Bond Dimension")
+# plt.xlabel("Max Bond Dimension")
+# plt.ylabel("Energy")
+# plt.grid(True)
+# plt.legend()
+# save(fig, "energy_vs_bond_dim.png")
+# plt.show()
 
 print("\nAll plots generated successfully.")
 if SAVE_PLOTS:
