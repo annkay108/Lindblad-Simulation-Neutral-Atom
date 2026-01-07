@@ -69,11 +69,11 @@ def save_results(results, filename="results"):
     print(f"Results saved to {json_path}...")
 
 if __name__ == "__main__":
-    iterations_list = [5, 10, 15, 20, 23, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
-    bond_dim_list = [50, 100, 400, 450, 500]
+    iterations_list = [5]
+    bond_dim_list = [50]
 
     results = run_experiments(iterations_list, bond_dim_list)
-    save_results(results, filename="mps_gate_implementation_results_2")
+    save_results(results, filename="mps_gate_implementation_results_9")
 
 
     

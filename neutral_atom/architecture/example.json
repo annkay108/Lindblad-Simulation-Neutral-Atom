@@ -1,0 +1,76 @@
+{
+  "name": "rubidium",
+  "properties": {
+    "nRows": 15,
+    "nColumns": 15,
+    "nAods": 10,
+    "nAodCoordinates": 10,
+    "interQubitDistance": 3,
+    "minimalAodDistance": 2,
+    "interactionRadius": 2,
+    "blockingFactor": 1
+  },
+  "parameters": {
+    "nQubits": 90,
+    "gateTimes": {
+      "none": 0.06,
+      "rx": 0.06,
+      "rz": 0.06,
+      "h": 0.06,
+      "x": 0.06,
+      "p": 0.001,
+      "t": 0.001,
+      "cp": 0.06,
+      "cx": 0.06,
+      "cz": 0.06,
+      "ccz": 0.4,
+      "cccz": 0.6,
+      "ccccz": 0.8,
+      "mcx": 2.5,
+      "u": 1.0,
+      "sdg": 0.06,
+      "u2": 0.06,
+      "s": 0.06,
+      "tdg": 0.06,
+      "z": 0.001
+    },
+    "gateAverageFidelities": {
+      "none": 1.0,
+      "h": 0.995,
+      "x": 1.0,
+      "rx": 1.0,
+      "rz": 1.0,
+      "p": 1.0,
+      "t": 1.0,
+      "cp": 1.0,
+      "cz": 0.9999,
+      "ccz": 0.999,
+      "cccz": 0.999,
+      "ccccz": 0.999,
+      "cccccz": 0.999,
+      "mcx": 0.999,
+      "u": 0.9999,
+      "sdg": 0.995,
+      "u2": 0.995,
+      "s": 0.995,
+      "tdg": 0.995,
+      "z": 1.0
+    },
+    "decoherenceTimes": {
+      "t1": 1000000000000,
+      "t2": 15000000000
+    },
+    "shuttlingTimes": {
+      "move": 0.05,
+      "aod_move": 0.05,
+      "aod_activate": 20,
+      "aod_deactivate": 20
+    },
+    "shuttlingAverageFidelities": {
+      "move": 1,
+      "aod_move": 1,
+      "aod_activate": 1,
+      "aod_deactivate": 1
+    }
+  }
+}
