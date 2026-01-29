@@ -82,6 +82,6 @@ def save_results(results, filename="results"):
 
 if __name__ == "__main__":
     iterations_list = [150]
-    bond_dim_list = [60000]
+    bond_dim_list = [2,3,4,5,10]
     results = run_experiments(iterations_list, bond_dim_list)
-    save_results(results, filename="mps_gate_implementation_results_news")
+    save_results(results, filename="mps_gate_implementation_results_news_1")

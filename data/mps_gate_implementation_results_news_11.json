@@ -1,0 +1,32 @@
+[
+    {
+        "iterations": 150,
+        "max_bond_dim": 2,
+        "execution_time": 0.6595346927642822,
+        "energy": -5.417253078444557
+    },
+    {
+        "iterations": 150,
+        "max_bond_dim": 3,
+        "execution_time": 0.6407899856567383,
+        "energy": -5.410932101153555
+    },
+    {
+        "iterations": 150,
+        "max_bond_dim": 4,
+        "execution_time": 0.6299388408660889,
+        "energy": -5.410471520764756
+    },
+    {
+        "iterations": 150,
+        "max_bond_dim": 5,
+        "execution_time": 0.6475908756256104,
+        "energy": -5.410471520764756
+    },
+    {
+        "iterations": 150,
+        "max_bond_dim": 10,
+        "execution_time": 0.6454079151153564,
+        "energy": -5.410471520764756
+    }
+]
