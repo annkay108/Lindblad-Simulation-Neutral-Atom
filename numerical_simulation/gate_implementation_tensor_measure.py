@@ -31,8 +31,8 @@ def run_single_experiment(no_of_iterations, max_bond_dim):
     @qml.qnode(dev)
     def apply_unitary_iteration(index, state):
         qml.StatePrep(state, wires=range(n_qubits))
-        qml.QubitUnitary(dilated_unitary[index], wires=range(n_qubits))
-        qml.QubitUnitary(dilated_unitary[index+1], wires=range(n_qubits))
+        unitary = dilated_unitary[index+1] @ dilated_unitary[index]
+        qml.QubitUnitary(unitary, wires=range(n_qubits))
 
         result = {"state": qml.state(), "expval": qml.expval(H_total)}
         return result
