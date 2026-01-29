@@ -6,14 +6,24 @@ import utils
 
 
 def generate_pennylane_circuit_from_unitary():
-    no_of_iterations = 20  #-5.01500273878082 for 24 steps 1254 seconds
+    no_of_iterations = 150  #-5.01500273878082 for 24 steps 1254 seconds
     dilated_unitary, n_qubits = utils.load_unitary_matrices()
 
-    total_qubits = n_qubits + no_of_iterations
+    kwargs_mps = {
+        # Maximum bond dimension of the MPS
+        "max_bond_dim": 500000,
+        # Cutoff parameter for the singular value decomposition
+        "cutoff": np.finfo(np.complex128).eps,
+        # Contraction strategy to apply gates
+        "contract": "auto-mps",
+    }
+
+    dev = qml.device('default.tensor', method="mps", **kwargs_mps)
+
+    # total_qubits = n_qubits + no_of_iterations
+    # dev = qml.device('default.tensor', wires=total_qubits)
 
     hamiltonian_quspin, H_total = utils.tmif4_hamiltonian_pauli()
-
-    dev = qml.device('default.tensor', wires=total_qubits)
 
 
     @qml.qnode(dev)
@@ -34,7 +44,7 @@ def generate_pennylane_circuit_from_unitary():
     end_time = time.time()
     print(f"Circuit reset execution time: {end_time - start_time} seconds for {no_of_iterations} iterations \n Reset result: {result} \n")
 
-    print(qml.draw(circuit)())
+    # print(qml.draw(circuit)())
 
     # start_time_post = time.time()
     # result = circuit(postselect=0)

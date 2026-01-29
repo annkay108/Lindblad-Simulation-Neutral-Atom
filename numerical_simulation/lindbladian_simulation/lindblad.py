@@ -89,7 +89,7 @@ class LindbladSimulator:
         return psi
     
     def save_operator(self, ops):
-        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators.pickle"
+        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators_150.pickle"
         if not os.path.exists(path):
             with open(path, "wb") as f:
                 pickle.dump(ops, f)

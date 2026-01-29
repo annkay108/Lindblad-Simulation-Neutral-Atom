@@ -84,7 +84,7 @@ psi0 = psi0 / la.norm(psi0)
 print("|<psi0|psiGS>| = ", np.abs(np.vdot(psi_GS, psi0)))
 
 # Exact simulation
-T = 80
+T = 150
 num_t = int(T)
 times = np.arange(num_t + 1) * (T / num_t)
 H_obj = Qobj(H_mat)

@@ -10,6 +10,10 @@ def run_single_experiment(no_of_iterations, max_bond_dim):
     # for 23 steps ground -5.002728873837382
     dilated_unitary, n_qubits = utils.load_unitary_matrices()
 
+    initial_state = np.zeros(2**n_qubits, dtype=complex)
+    initial_state[0] = 1.0
+    state = initial_state
+
     total_qubits = n_qubits + no_of_iterations
 
     hamiltonian_quspin, H_total = utils.tmif4_hamiltonian_pauli()
@@ -24,23 +28,31 @@ def run_single_experiment(no_of_iterations, max_bond_dim):
     }
 
     dev = qml.device('default.tensor', method="mps", **kwargs_mps)
-
     @qml.qnode(dev)
-    def circuit():
-        ancilla_idx = 0
+    def apply_unitary_iteration(index, state):
+        qml.StatePrep(state, wires=range(n_qubits))
+        qml.QubitUnitary(dilated_unitary[index], wires=range(n_qubits))
+        qml.QubitUnitary(dilated_unitary[index+1], wires=range(n_qubits))
 
-        for i, U_s in enumerate(dilated_unitary):
-            qml.QubitUnitary(U_s, wires=range(n_qubits))
-            if i % 2 == 1:
-                qml.SWAP(wires=[0, n_qubits + ancilla_idx])
-                ancilla_idx += 1
-            if(ancilla_idx == no_of_iterations):
-                break
-        return qml.expval(H_total)
+        result = {"state": qml.state(), "expval": qml.expval(H_total)}
+        return result
 
-    # print(qml.draw(circuit)())
     startTime = time()
-    energy = circuit()
+    for i in range(0,no_of_iterations*2,2):
+        result = apply_unitary_iteration(i, state)
+
+        zero = np.array([1, 0])
+        psi_reshaped = result["state"].reshape(2, 16)
+
+        psi_0 = psi_reshaped[0]        # amplitudes where q0 = 0
+        p0 = np.vdot(psi_0, psi_0).real
+
+        state = np.kron(zero, psi_0 / np.sqrt(p0))
+
+        energy = result["expval"]
+        # print(f"Iteration {i+1}, state: {state}")
+    
+    final_energy = energy
     endTime = time()
 
     exect_time = endTime - startTime
@@ -48,7 +60,7 @@ def run_single_experiment(no_of_iterations, max_bond_dim):
         "iterations": no_of_iterations,
         "max_bond_dim": max_bond_dim,
         "execution_time": exect_time,
-        "energy": energy,
+        "energy": final_energy,
     }
 
 def run_experiments(iterations_list, bond_dim_list):
@@ -71,9 +83,5 @@ def save_results(results, filename="results"):
 if __name__ == "__main__":
     iterations_list = [150]
     bond_dim_list = [60000]
-
     results = run_experiments(iterations_list, bond_dim_list)
-    save_results(results, filename="mps_gate_implementation_results_150")
-
-
-    
+    save_results(results, filename="mps_gate_implementation_results_news")

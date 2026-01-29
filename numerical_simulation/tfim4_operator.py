@@ -24,7 +24,7 @@ class TFIM4Operator:
     def apply_operator(self, flip_dice=[]):
         fidelity_list = []
 
-        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators.pickle"
+        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators_150.pickle"
         dilated_unitary = np.load(path, allow_pickle=True)
        
         n_qubits = int(np.log2(dilated_unitary[0].shape[0]))
