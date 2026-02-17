@@ -12,7 +12,7 @@ def run_single_experiment(no_of_iterations, max_bond_dim):
 
     total_qubits = n_qubits + no_of_iterations
 
-    hamiltonian_quspin, H_total = utils.tmif4_hamiltonian_pauli()
+    hamiltonian_quspin, H_total = utils.tmif4_hamiltonian_pauli(9)
 
     kwargs_mps = {
         # Maximum bond dimension of the MPS
@@ -36,9 +36,10 @@ def run_single_experiment(no_of_iterations, max_bond_dim):
                 ancilla_idx += 1
             if(ancilla_idx == no_of_iterations):
                 break
+        print("Calculating final energy...")
         return qml.expval(H_total)
 
-    # print(qml.draw(circuit)())
+    print(qml.draw(circuit)())
     startTime = time()
     energy = circuit()
     endTime = time()
@@ -69,11 +70,11 @@ def save_results(results, filename="results"):
     print(f"Results saved to {json_path}...")
 
 if __name__ == "__main__":
-    iterations_list = [150]
-    bond_dim_list = [60000]
+    iterations_list = [2]
+    bond_dim_list = [600]
 
     results = run_experiments(iterations_list, bond_dim_list)
-    save_results(results, filename="mps_gate_implementation_results_150")
+    save_results(results, filename="mps_gate_implementation_results5sites_80iter_3seg")
 
 
     

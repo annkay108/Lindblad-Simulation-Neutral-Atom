@@ -1,0 +1,1502 @@
+[
+    {
+        "iterations": 1,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -7.3825695149481705
+    },
+    {
+        "iterations": 2,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -7.910221402286637
+    },
+    {
+        "iterations": 3,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -8.283530009075541
+    },
+    {
+        "iterations": 4,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -8.537266752385937
+    },
+    {
+        "iterations": 5,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -8.916852629475878
+    },
+    {
+        "iterations": 6,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -9.30445935020856
+    },
+    {
+        "iterations": 7,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -9.695571428178491
+    },
+    {
+        "iterations": 8,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -9.907501615800435
+    },
+    {
+        "iterations": 9,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.01077188118141
+    },
+    {
+        "iterations": 10,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.126732208048596
+    },
+    {
+        "iterations": 11,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.234081014270378
+    },
+    {
+        "iterations": 12,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.299572847093305
+    },
+    {
+        "iterations": 13,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.344966315930375
+    },
+    {
+        "iterations": 14,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.37963136134156
+    },
+    {
+        "iterations": 15,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.433211205899834
+    },
+    {
+        "iterations": 16,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.505284029861905
+    },
+    {
+        "iterations": 17,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.560278738148625
+    },
+    {
+        "iterations": 18,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.561085555079252
+    },
+    {
+        "iterations": 19,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.582724072535754
+    },
+    {
+        "iterations": 20,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.617298776292744
+    },
+    {
+        "iterations": 21,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.621609330349898
+    },
+    {
+        "iterations": 22,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.662081396446094
+    },
+    {
+        "iterations": 23,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.653441673598431
+    },
+    {
+        "iterations": 24,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.686639704546298
+    },
+    {
+        "iterations": 25,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.691245546174116
+    },
+    {
+        "iterations": 26,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.708392063264819
+    },
+    {
+        "iterations": 27,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.72206618878237
+    },
+    {
+        "iterations": 28,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.72435750567902
+    },
+    {
+        "iterations": 29,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.74822860896004
+    },
+    {
+        "iterations": 30,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.75403182715667
+    },
+    {
+        "iterations": 31,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.767935241546379
+    },
+    {
+        "iterations": 32,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.7739212487533
+    },
+    {
+        "iterations": 33,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.783930953552053
+    },
+    {
+        "iterations": 34,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.79048722516926
+    },
+    {
+        "iterations": 35,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.806123861653722
+    },
+    {
+        "iterations": 36,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.807499774228841
+    },
+    {
+        "iterations": 37,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.822992600607247
+    },
+    {
+        "iterations": 38,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.824094909243568
+    },
+    {
+        "iterations": 39,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.838871369623956
+    },
+    {
+        "iterations": 40,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.842041819947982
+    },
+    {
+        "iterations": 41,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.849434161738673
+    },
+    {
+        "iterations": 42,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.858297069261917
+    },
+    {
+        "iterations": 43,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.86052458002757
+    },
+    {
+        "iterations": 44,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.874570895432317
+    },
+    {
+        "iterations": 45,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.875055485519109
+    },
+    {
+        "iterations": 46,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.888044387709183
+    },
+    {
+        "iterations": 47,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.889201115432744
+    },
+    {
+        "iterations": 48,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.899456448084129
+    },
+    {
+        "iterations": 49,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.90287425961323
+    },
+    {
+        "iterations": 50,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.910058420081302
+    },
+    {
+        "iterations": 51,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.915938286702689
+    },
+    {
+        "iterations": 52,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.9213844254322
+    },
+    {
+        "iterations": 53,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.928675816998592
+    },
+    {
+        "iterations": 54,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.932535088795845
+    },
+    {
+        "iterations": 55,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.94029574982476
+    },
+    {
+        "iterations": 56,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.942185264716775
+    },
+    {
+        "iterations": 57,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.950896159440873
+    },
+    {
+        "iterations": 58,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.951928549466984
+    },
+    {
+        "iterations": 59,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.960541143891632
+    },
+    {
+        "iterations": 60,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.961903474851818
+    },
+    {
+        "iterations": 61,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.969111576301922
+    },
+    {
+        "iterations": 62,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.971858771679411
+    },
+    {
+        "iterations": 63,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.976721967601716
+    },
+    {
+        "iterations": 64,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.981352884316005
+    },
+    {
+        "iterations": 65,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.984083545945488
+    },
+    {
+        "iterations": 66,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.990104617129292
+    },
+    {
+        "iterations": 67,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.991753346804128
+    },
+    {
+        "iterations": 68,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.998081681324873
+    },
+    {
+        "iterations": 69,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -10.999253092468688
+    },
+    {
+        "iterations": 70,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.00521324604995
+    },
+    {
+        "iterations": 71,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.006491546565616
+    },
+    {
+        "iterations": 72,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.011751323517046
+    },
+    {
+        "iterations": 73,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.013497753330755
+    },
+    {
+        "iterations": 74,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.01784577803006
+    },
+    {
+        "iterations": 75,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.020340340362822
+    },
+    {
+        "iterations": 76,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.023484295818498
+    },
+    {
+        "iterations": 77,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.02687146749852
+    },
+    {
+        "iterations": 78,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.028663982613075
+    },
+    {
+        "iterations": 79,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.032844686992435
+    },
+    {
+        "iterations": 80,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.033728439077581
+    },
+    {
+        "iterations": 81,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.038234060749978
+    },
+    {
+        "iterations": 82,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.03889715108312
+    },
+    {
+        "iterations": 83,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.042946781164494
+    },
+    {
+        "iterations": 84,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.044043650384245
+    },
+    {
+        "iterations": 85,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.047104627295512
+    },
+    {
+        "iterations": 86,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.048945447809187
+    },
+    {
+        "iterations": 87,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.050956647282533
+    },
+    {
+        "iterations": 88,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.053459031035667
+    },
+    {
+        "iterations": 89,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.054687177749946
+    },
+    {
+        "iterations": 90,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.057500546385137
+    },
+    {
+        "iterations": 91,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.058336111412952
+    },
+    {
+        "iterations": 92,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.061105121839633
+    },
+    {
+        "iterations": 93,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.061821193603251
+    },
+    {
+        "iterations": 94,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.06433952338332
+    },
+    {
+        "iterations": 95,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.065128269632325
+    },
+    {
+        "iterations": 96,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.06731732216578
+    },
+    {
+        "iterations": 97,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.068293030961875
+    },
+    {
+        "iterations": 98,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.070040022861088
+    },
+    {
+        "iterations": 99,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.071295217765233
+    },
+    {
+        "iterations": 100,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.072537825568418
+    },
+    {
+        "iterations": 101,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.074140527302369
+    },
+    {
+        "iterations": 102,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.07489078455515
+    },
+    {
+        "iterations": 103,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.076757738909945
+    },
+    {
+        "iterations": 104,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.077164444154905
+    },
+    {
+        "iterations": 105,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.079116776327673
+    },
+    {
+        "iterations": 106,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.079434636532971
+    },
+    {
+        "iterations": 107,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.081178448523687
+    },
+    {
+        "iterations": 108,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.081666303048781
+    },
+    {
+        "iterations": 109,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.082989556907872
+    },
+    {
+        "iterations": 110,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.083802775193377
+    },
+    {
+        "iterations": 111,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.084658198469198
+    },
+    {
+        "iterations": 112,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.08576952848668
+    },
+    {
+        "iterations": 113,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.086247147210422
+    },
+    {
+        "iterations": 114,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.087505303384773
+    },
+    {
+        "iterations": 115,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.087799965227394
+    },
+    {
+        "iterations": 116,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.089020621413502
+    },
+    {
+        "iterations": 117,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.089313520182094
+    },
+    {
+        "iterations": 118,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09035602514839
+    },
+    {
+        "iterations": 119,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.090743884966361
+    },
+    {
+        "iterations": 120,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.091569864849323
+    },
+    {
+        "iterations": 121,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.092075313180352
+    },
+    {
+        "iterations": 122,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.092699404125913
+    },
+    {
+        "iterations": 123,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09329455049924
+    },
+    {
+        "iterations": 124,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.093744820384462
+    },
+    {
+        "iterations": 125,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.094417880935445
+    },
+    {
+        "iterations": 126,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.094734085575787
+    },
+    {
+        "iterations": 127,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.095455515637774
+    },
+    {
+        "iterations": 128,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.095664826623727
+    },
+    {
+        "iterations": 129,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09639757567954
+    },
+    {
+        "iterations": 130,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09656522213721
+    },
+    {
+        "iterations": 131,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09724516177397
+    },
+    {
+        "iterations": 132,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.097452498673682
+    },
+    {
+        "iterations": 133,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.097988798528222
+    },
+    {
+        "iterations": 134,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09831283228465
+    },
+    {
+        "iterations": 135,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.098664869805491
+    },
+    {
+        "iterations": 136,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09912510103663
+    },
+    {
+        "iterations": 137,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.099306120288944
+    },
+    {
+        "iterations": 138,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.099848591158027
+    },
+    {
+        "iterations": 139,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.09993610183035
+    },
+    {
+        "iterations": 140,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.100474327153316
+    },
+    {
+        "iterations": 141,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.100566596803052
+    },
+    {
+        "iterations": 142,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.101011314649917
+    },
+    {
+        "iterations": 143,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.101171204159176
+    },
+    {
+        "iterations": 144,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.101486611204365
+    },
+    {
+        "iterations": 145,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.101725445339582
+    },
+    {
+        "iterations": 146,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.101934871225547
+    },
+    {
+        "iterations": 147,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.102218126738695
+    },
+    {
+        "iterations": 148,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.102359933537794
+    },
+    {
+        "iterations": 149,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.102650865002042
+    },
+    {
+        "iterations": 150,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10276430193723
+    },
+    {
+        "iterations": 151,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.103043654687632
+    },
+    {
+        "iterations": 152,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.103143622388465
+    },
+    {
+        "iterations": 153,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.103402473846112
+    },
+    {
+        "iterations": 154,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.103493527734676
+    },
+    {
+        "iterations": 155,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.103734740086988
+    },
+    {
+        "iterations": 156,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.103830815895629
+    },
+    {
+        "iterations": 157,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.104035090604802
+    },
+    {
+        "iterations": 158,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.104156833776427
+    },
+    {
+        "iterations": 159,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.104302625694462
+    },
+    {
+        "iterations": 160,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10447267233366
+    },
+    {
+        "iterations": 161,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.104554317824569
+    },
+    {
+        "iterations": 162,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.104764424790527
+    },
+    {
+        "iterations": 163,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.104797963830505
+    },
+    {
+        "iterations": 164,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105019538199464
+    },
+    {
+        "iterations": 165,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105046113269637
+    },
+    {
+        "iterations": 166,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105238123423918
+    },
+    {
+        "iterations": 167,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105294186491047
+    },
+    {
+        "iterations": 168,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.1054251199054
+    },
+    {
+        "iterations": 169,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10552670021901
+    },
+    {
+        "iterations": 170,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105599970656716
+    },
+    {
+        "iterations": 171,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105733135074114
+    },
+    {
+        "iterations": 172,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10577133702458
+    },
+    {
+        "iterations": 173,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105907054787117
+    },
+    {
+        "iterations": 174,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.105937717977955
+    },
+    {
+        "iterations": 175,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.1060565877681
+    },
+    {
+        "iterations": 176,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106096943369485
+    },
+    {
+        "iterations": 177,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10619085098089
+    },
+    {
+        "iterations": 178,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106239502619033
+    },
+    {
+        "iterations": 179,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106315910562566
+    },
+    {
+        "iterations": 180,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106367778991384
+    },
+    {
+        "iterations": 181,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10643526257697
+    },
+    {
+        "iterations": 182,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10648717049806
+    },
+    {
+        "iterations": 183,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106542158149171
+    },
+    {
+        "iterations": 184,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106601526719793
+    },
+    {
+        "iterations": 185,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10664004274256
+    },
+    {
+        "iterations": 186,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106712866599128
+    },
+    {
+        "iterations": 187,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106732340974588
+    },
+    {
+        "iterations": 188,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106814049857869
+    },
+    {
+        "iterations": 189,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106823894901295
+    },
+    {
+        "iterations": 190,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106903454348176
+    },
+    {
+        "iterations": 191,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10691987562362
+    },
+    {
+        "iterations": 192,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.106979191671385
+    },
+    {
+        "iterations": 193,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.1070146676449
+    },
+    {
+        "iterations": 194,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107046599670657
+    },
+    {
+        "iterations": 195,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107102550335965
+    },
+    {
+        "iterations": 196,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107114000085657
+    },
+    {
+        "iterations": 197,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107176943030728
+    },
+    {
+        "iterations": 198,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107181739555605
+    },
+    {
+        "iterations": 199,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107237395257858
+    },
+    {
+        "iterations": 200,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107249477515268
+    },
+    {
+        "iterations": 201,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107289160257878
+    },
+    {
+        "iterations": 202,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107311932507216
+    },
+    {
+        "iterations": 203,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10733595842773
+    },
+    {
+        "iterations": 204,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10736488142566
+    },
+    {
+        "iterations": 205,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107382539730398
+    },
+    {
+        "iterations": 206,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10741033040083
+    },
+    {
+        "iterations": 207,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10742693222143
+    },
+    {
+        "iterations": 208,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107450530222993
+    },
+    {
+        "iterations": 209,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107466534293936
+    },
+    {
+        "iterations": 210,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10748996663277
+    },
+    {
+        "iterations": 211,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107502567944262
+    },
+    {
+        "iterations": 212,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107528166275017
+    },
+    {
+        "iterations": 213,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107535302125148
+    },
+    {
+        "iterations": 214,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107563464758002
+    },
+    {
+        "iterations": 215,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107569090920892
+    },
+    {
+        "iterations": 216,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107594791471666
+    },
+    {
+        "iterations": 217,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107604661129011
+    },
+    {
+        "iterations": 218,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107620953495505
+    },
+    {
+        "iterations": 219,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10764011991198
+    },
+    {
+        "iterations": 220,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107646253338698
+    },
+    {
+        "iterations": 221,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107672565503455
+    },
+    {
+        "iterations": 222,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107672590888635
+    },
+    {
+        "iterations": 223,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107698827654076
+    },
+    {
+        "iterations": 224,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.1077003463095
+    },
+    {
+        "iterations": 225,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107720332248755
+    },
+    {
+        "iterations": 226,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107728350598196
+    },
+    {
+        "iterations": 227,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107738670995024
+    },
+    {
+        "iterations": 228,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107752707329537
+    },
+    {
+        "iterations": 229,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107756584818258
+    },
+    {
+        "iterations": 230,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107772451517553
+    },
+    {
+        "iterations": 231,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10777540062515
+    },
+    {
+        "iterations": 232,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107787955322493
+    },
+    {
+        "iterations": 233,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107792809744437
+    },
+    {
+        "iterations": 234,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107801519964271
+    },
+    {
+        "iterations": 235,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107808282612135
+    },
+    {
+        "iterations": 236,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10781522151554
+    },
+    {
+        "iterations": 237,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10782111374879
+    },
+    {
+        "iterations": 238,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107828536726364
+    },
+    {
+        "iterations": 239,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107832386859783
+    },
+    {
+        "iterations": 240,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107841399371393
+    },
+    {
+        "iterations": 241,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107844301945708
+    },
+    {
+        "iterations": 242,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107852199682513
+    },
+    {
+        "iterations": 243,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10785698249983
+    },
+    {
+        "iterations": 244,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107861417255197
+    },
+    {
+        "iterations": 245,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107870164445185
+    },
+    {
+        "iterations": 246,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107870915110711
+    },
+    {
+        "iterations": 247,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107881785665526
+    },
+    {
+        "iterations": 248,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.10788117820142
+    },
+    {
+        "iterations": 249,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107891222074775
+    },
+    {
+        "iterations": 250,
+        "max_bond_dim": 15,
+        "execution_time": 1.0,
+        "energy": -11.107892800915366
+    }
+]

@@ -1,0 +1,9 @@
+#ignore pickle files
+*.pickle
+*.pkl
+
+# macOS system files
+.DS_Store
+
+#ignore .venv folder
+.venv/

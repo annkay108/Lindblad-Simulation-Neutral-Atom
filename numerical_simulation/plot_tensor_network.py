@@ -4,10 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-DATA_FILE = "data/mps_gate_implementation_results_2.json"
+DATA_FILE = "data/mps_gate_implementation_results_news_8sites1.json"
 SAVE_PLOTS = True
 PLOT_DIR = "plots"
-TRUE_ENERGY = -5.4315195827374945
+# TRUE_ENERGY = -5.4315195827374945
+TRUE_ENERGY = -11.10821467
 
 os.makedirs(PLOT_DIR, exist_ok=True)
 
@@ -37,7 +38,7 @@ plt.xlabel("Iterations")
 plt.ylabel("Energy")
 plt.grid(True)
 plt.legend()
-save(fig, "energy_vs_iterations.png")
+save(fig, "energy_vs_iterations1_6sites.png")
 plt.show()
 
 # --------------------------------------
@@ -50,7 +51,7 @@ plt.title("Execution Time vs Iterations")
 plt.xlabel("Iterations")
 plt.ylabel("Execution Time (seconds)")
 plt.grid(True)
-save(fig, "runtime_vs_iterations.png")
+save(fig, "runtime_vs_iterations1.png")
 plt.show()
 
 # --------------------------------------
@@ -63,7 +64,7 @@ plt.title("Execution Time vs Max Bond Dimension")
 plt.xlabel("Max Bond Dimension")
 plt.ylabel("Execution Time (seconds)")
 plt.grid(True)
-save(fig, "runtime_vs_bond_dim.png")
+save(fig, "runtime_vs_bond_dim1.png")
 plt.show()
 
 # --------------------------------------
@@ -78,7 +79,7 @@ plt.xlabel("Max Bond Dimension")
 plt.ylabel("Energy")
 plt.grid(True)
 plt.legend()
-save(fig, "energy_vs_bond_dim.png")
+save(fig, "energy_vs_bond_dim1.png")
 plt.show()
 
 # --------------------------------------
@@ -91,7 +92,7 @@ sns.heatmap(pivot, annot=True, fmt=".1f", cmap="rocket_r")
 plt.title("Runtime Heatmap (seconds)")
 plt.xlabel("Max Bond Dimension")
 plt.ylabel("Iterations")
-save(fig, "runtime_heatmap.png")
+save(fig, "runtime_heatmap1.png")
 plt.show()
 
 print("\nAll plots generated successfully.")

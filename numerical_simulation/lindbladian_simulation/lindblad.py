@@ -89,13 +89,13 @@ class LindbladSimulator:
         return psi
     
     def save_operator(self, ops):
-        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators_150.pickle"
+        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators5sites_80iter_3seg.pickle"
         if not os.path.exists(path):
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
 
     def step_Lindblad(
-        self, psi, psi_op, tau, num_t, num_segment, num_rep, S_s, M_s, dice, intorder
+        self, psi, tau, num_t, num_segment, num_rep, S_s, M_s, dice, intorder
     ):
         """
         Propagate one step of the dilated jump operator in a batch.
@@ -121,7 +121,7 @@ class LindbladSimulator:
         eHt = self.eHt
         eHT = self.eHT
         E_A = self.E_A  # eigenvalue of A
-        psi_A = self.psi_A  # eigenvector of A
+        psi_A = self.psi_A  # eigenvector of A shape=(16, 16) each column is an eigenvector of A
         Ns = self.Ns  # dimension of the system
         ZA_dilate = np.zeros(
             (Ns_contour, 2 * Ns, num_rep), dtype=complex
@@ -147,6 +147,7 @@ class LindbladSimulator:
                 expZA = np.exp(
                     -1j * tau_s * np.abs(F_contour[i]) * np.outer(E_A, tau_scal)
                 )
+
             else:  # second order
                 expZA = np.exp(
                     -1j * 0.5 * tau_s * np.abs(F_contour[i]) * np.outer(E_A, tau_scal)
@@ -160,9 +161,9 @@ class LindbladSimulator:
         psi_t_batch.fill(0j)
         psi_t_batch[:Ns, :] = psi
 
-        psi_t_batch_op = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
-        psi_t_batch_op.fill(0j)
-        psi_t_batch_op[:Ns, :] = psi_op
+        # psi_t_batch_op = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
+        # psi_t_batch_op.fill(0j)
+        # psi_t_batch_op[:Ns, :] = psi_op
 
         ops = []  #  extract the unitaries of the circuit here
         for iseg in range(num_segment):
@@ -170,20 +171,28 @@ class LindbladSimulator:
                 for i in range(int(Ns_contour / 2)):  # left-ordered product
                     VK = np.kron(VF_contour[i, :, :], psi_A)
                     psi_t_batch = VK.conj().T @ psi_t_batch
+                    ops.append(VK.conj().T)
                     # pointwise multiplication
                     psi_t_batch *= ZA_dilate[i, :, :]
+                    ops.append(np.diagflat(ZA_dilate[i, :, :]))
                     psi_t_batch = VK @ psi_t_batch
+                    ops.append(VK)
                     psi_t_batch = np.kron(np.identity(2), eHt) @ psi_t_batch
+                    ops.append(np.kron(np.identity(2), eHt))
                 for i in range(int(Ns_contour / 2)):  # right-ordered product
                     psi_t_batch = np.kron(np.identity(2), eHt.conj().T) @ psi_t_batch
+                    ops.append(np.kron(np.identity(2), eHt.conj().T))
 
                     VK = np.kron(VF_contour[i + int(Ns_contour / 2), :, :], psi_A)
                     psi_t_batch = VK.conj().T @ psi_t_batch
+                    ops.append(VK.conj().T)
 
                     # pointwise multiplication
                     psi_t_batch *= ZA_dilate[i + int(Ns_contour / 2), :, :]
+                    ops.append(np.diagflat(ZA_dilate[i + int(Ns_contour / 2), :, :]))
 
                     psi_t_batch = VK @ psi_t_batch
+                    ops.append(VK)
             else:  # first order
                 # only #left-ordered product
                 for i in range(int(Ns_contour)):
@@ -204,23 +213,23 @@ class LindbladSimulator:
                 is_rewind = True
                 if is_rewind:
                     psi_t_batch = (
-                        np.kron(np.identity(2), self.eHT.conj().T) @ psi_t_batch
+                        np.kron(np.identity(2), self.eHT.conj()) @ psi_t_batch
                     )
                     psi_t_batch = (
-                        np.kron(np.identity(2), self.eHT.conj().T) @ psi_t_batch
+                        np.kron(np.identity(2), self.eHT) @ psi_t_batch
                     )
-                    ops.append(np.kron(np.identity(2), self.eHT.conj().T))
-                    ops.append(np.kron(np.identity(2), self.eHT.conj().T))
+                    ops.append(np.kron(np.identity(2), self.eHT.conj()))
+                    ops.append(np.kron(np.identity(2), self.eHT))
                     # ops.append(["r"])
 
-                overall_matrix_algorithm = reduce(lambda a, b: a @ b, reversed(ops))
+            overall_matrix_algorithm = reduce(lambda a, b: a @ b, reversed(ops))
 
-                psi_t_batch_op = overall_matrix_algorithm @ psi_t_batch_op
+                # psi_t_batch_op = overall_matrix_algorithm @ psi_t_batch_op
         
         psi_without_op = self.trace_out_ancilla(psi_t_batch, dice, num_batch, Ns, psi)
-        psi_all_op = self.trace_out_ancilla(psi_t_batch_op, dice, num_batch, Ns, psi_op)
+        # psi_all_op = self.trace_out_ancilla(psi_t_batch_op, dice, num_batch, Ns, psi_op)
 
-        return psi_without_op, psi_all_op, overall_matrix_algorithm
+        return psi_without_op, overall_matrix_algorithm
 
     def Lindblad_simulation(
         self, T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS=[], intorder=2, flip_dice=[]
@@ -250,12 +259,12 @@ class LindbladSimulator:
         self.E_A, self.psi_A = la.eigh(
             self.A_op
         )  # diagonalize A for later implementation
-
+        print("Eigenvalues of A: ", self.E_A)
         # Output Storage
         time_H = np.zeros(num_t + 1)  # List of total Hamiltonian simulation time zeros [0, 1, 2, ..., 80]
 
-        avg_energy_hist_op = np.zeros((num_t + 1, num_rep)) # shape is (81, 1)
-        avg_energy_hist_op[0, :].fill(np.vdot(psi0, H @ psi0).real)  # List of energy
+        # avg_energy_hist_op = np.zeros((num_t + 1, num_rep)) # shape is (81, 1)
+        # avg_energy_hist_op[0, :].fill(np.vdot(psi0, H @ psi0).real)  # List of energy
 
         avg_energy_hist = np.zeros((num_t + 1, num_rep)) # shape is (81, 1)
         avg_energy_hist[0, :].fill(np.vdot(psi0, H @ psi0).real)  # List of energy
@@ -281,24 +290,26 @@ class LindbladSimulator:
 
         rho_hist = np.zeros((Ns, Ns, num_t + 1), dtype=complex)  # \rho_n Ns=16, num_t=80 shape=(16, 16, 81)
         psi_all = np.zeros((Ns, num_rep), dtype=complex)  # List of psi_n Ns=16, num_rep=1 shape=(16, 1)
-        psi_all_ops = np.zeros((Ns, num_rep), dtype=complex)
+        # psi_all_ops = np.zeros((Ns, num_rep), dtype=complex)
 
         for i in range(num_rep):
-            psi_all[:, i] = psi0.copy()
-            psi_all_ops[:, i] = psi0.copy()
+            psi_all[:, i] = self.eHT.conj().T @ psi0.copy()
+            # psi_all[:, i] = psi0.copy()
+            # psi_all_ops[:, i] = self.eHT.conj().T @ psi0.copy()
 
         rho_hist[:, :, 0] = np.outer(psi_all[:, 0], psi_all[:, 0].conj().T)
        
         for it in range(num_t):
-            psi_all = eHtau @ psi_all
+            print(it, "iteration ")
+            psi_all = eHtau @ psi_all #coherent evolution under H for time tau = 1 last?
             all_gates.append(np.kron(np.identity(2), eHtau))
 
-            psi_all_ops = eHtau @ psi_all_ops
+            # psi_all_ops = eHtau @ psi_all_ops
 
             time_H[it + 1] = time_H[it] + tau
-            psi_all, psi_all_ops, ops = self.step_Lindblad(
+            psi_all, ops = self.step_Lindblad(
                 psi_all,
-                psi_all_ops,
+                # psi_all_ops,
                 tau,
                 num_t,
                 num_segment,
@@ -306,7 +317,7 @@ class LindbladSimulator:
                 S_s,
                 M_s,
                 flip_dice[it, :],
-                1,
+                intorder,
             )
             all_gates.append(ops)
             rho_hist[:, :, it + 1] = (
@@ -323,19 +334,20 @@ class LindbladSimulator:
                 np.abs(np.einsum("in,i->n", psi_all.conj(), psi_GS)) ** 2
             )  # Calculating overlap
 
-            avg_energy_hist_op[it + 1, :] = np.einsum(
-                "in,in->n", psi_all_ops.conj(), H @ psi_all_ops
-            ).real  # Calculating energy
-            avg_pGS_hist_op[it + 1, :] = (
-                np.abs(np.einsum("in,i->n", psi_all_ops.conj(), psi_GS)) ** 2
-            )  # Calculating overlap
+            # avg_energy_hist_op[it + 1, :] = np.einsum(
+            #     "in,in->n", psi_all_ops.conj(), H @ psi_all_ops
+            # ).real  # Calculating energy
+            # avg_pGS_hist_op[it + 1, :] = (
+            #     np.abs(np.einsum("in,i->n", psi_all_ops.conj(), psi_GS)) ** 2
+            # )  # Calculating overlap
 
         self.save_operator(all_gates)
         avg_energy = np.mean(avg_energy_hist, axis=1)
         avg_pGS = np.mean(avg_pGS_hist, axis=1)
 
-
-        avg_energy_op = np.mean(avg_energy_hist_op, axis=1)
-        avg_pGS_op = np.mean(avg_pGS_hist_op, axis=1)
+        avg_energy_op = []
+        avg_pGS_op = []
+        # avg_energy_op = np.mean(avg_energy_hist_op, axis=1)
+        # avg_pGS_op = np.mean(avg_pGS_hist_op, axis=1)
         print("Final energy (operator method): ", avg_pGS_hist[3])
         return time_series, avg_energy, avg_pGS, avg_energy_op, avg_pGS_op, time_H, rho_hist, all_gates

@@ -5,7 +5,7 @@ from quspin.operators import hamiltonian  # Hamiltonians and operators
 from pathlib import Path
 
 def load_unitary_matrices():
-    path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators_150.pickle"
+    path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators5sites_80iter_3seg.pickle"
     # path = Path().resolve().parent / "numerical_simulation/lindbladian_simulation/data/lindblad_operators.pickle"
     dilated_unitary = np.load(path, allow_pickle=True)
 
@@ -47,7 +47,7 @@ def tmif4_hamiltonian_pauli(L=4, J=1.0, g=1.2):
     return Hamiltonian_quspin, H_total
 
 def compare_ground_state():
-    Hamiltonian_quspin, H_total = tmif4_hamiltonian_pauli()
+    Hamiltonian_quspin, H_total = tmif4_hamiltonian_pauli(9)
 
     # # calculate spin energy levels
     E_GS_mat, psi_GS_mat  = Hamiltonian_quspin.eigsh(k=1, which="SA") # calculate the ground state so eigenvalue and corresponding eigenvector
