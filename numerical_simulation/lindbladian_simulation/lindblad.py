@@ -89,7 +89,7 @@ class LindbladSimulator:
         return psi
     
     def save_operator(self, ops):
-        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators5sites_80iter_3seg.pickle"
+        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators9sites_250iter_3segNew.pickle"
         if not os.path.exists(path):
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
@@ -222,7 +222,7 @@ class LindbladSimulator:
                     ops.append(np.kron(np.identity(2), self.eHT))
                     # ops.append(["r"])
 
-            overall_matrix_algorithm = reduce(lambda a, b: a @ b, reversed(ops))
+        overall_matrix_algorithm = reduce(lambda a, b: a @ b, reversed(ops))
 
                 # psi_t_batch_op = overall_matrix_algorithm @ psi_t_batch_op
         

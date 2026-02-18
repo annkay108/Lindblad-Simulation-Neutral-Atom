@@ -138,7 +138,7 @@ print(f"Lindblad simulation completed in {end - start} seconds.")
 #         json.dump(results, f, indent=4)
 #     print(f"Results saved to {json_path}...")
 
-# save_results(avg_energy_l, filename="lindblad_5sites_80iter_3seg_energy")
+# save_results(avg_energy_l, filename="lindblad_9sites_250iter_3segNew_energy")
 # lb_operator = TFIM4Operator(psi0, psi_GS)
 # psi_final, fidelity_list = lb_operator.apply_operator(flip_dice=flip_dice)
 

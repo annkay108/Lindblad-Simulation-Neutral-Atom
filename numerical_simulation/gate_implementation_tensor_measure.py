@@ -31,7 +31,7 @@ def run_single_experiment(no_of_iterations, max_bond_dim, no_of_sites):
     @qml.qnode(dev)
     def apply_unitary_iteration(index, state):
         qml.StatePrep(state, wires=range(n_qubits))
-        unitary = dilated_unitary[index+1] @ dilated_unitary[index]
+        unitary = dilated_unitary[index]
         qml.QubitUnitary(unitary, wires=range(n_qubits))
 
         result = {"state": qml.state(), "expval": qml.expval(H_total)}
@@ -39,7 +39,7 @@ def run_single_experiment(no_of_iterations, max_bond_dim, no_of_sites):
 
     startTime = time()
     final_result =[]
-    for i in range(0,no_of_iterations*2,2):
+    for i in range(0,no_of_iterations):
         result = apply_unitary_iteration(i, state)
 
         zero = np.array([1, 0])
@@ -53,12 +53,12 @@ def run_single_experiment(no_of_iterations, max_bond_dim, no_of_sites):
         energy = result["expval"]
 
         final_result.append({
-        "iterations": i//2 + 1,
+        "iterations": i,
         "max_bond_dim": max_bond_dim,
         "execution_time": 1.0,
         "energy": energy,
         })
-        # print(f"Iteration {i+1}, state: {state}")
+        print(f"Iteration {i}")
     
     # final_energy = energy
     # endTime = time()
@@ -79,8 +79,8 @@ def save_results(results, filename="results"):
     print(f"Results saved to {json_path}...")
 
 if __name__ == "__main__":
-    no_of_sites = 8
-    no_of_iterations = 250
-    max_bond_dim = 15
+    no_of_sites = 5
+    no_of_iterations = 80
+    max_bond_dim = 60
     results = run_experiments(no_of_iterations, max_bond_dim, no_of_sites)
-    save_results(results, filename=f"mps_gate_implementation_results_news_{no_of_sites}sites")
+    save_results(results, filename=f"mps_gate_implementation_results_news_{no_of_sites}sites_{no_of_iterations}iter")
