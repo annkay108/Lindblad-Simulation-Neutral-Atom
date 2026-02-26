@@ -79,8 +79,8 @@ def save_results(results, filename="results"):
     print(f"Results saved to {json_path}...")
 
 if __name__ == "__main__":
-    no_of_sites = 5
-    no_of_iterations = 80
+    no_of_sites = 9
+    no_of_iterations = 250
     max_bond_dim = 60
     results = run_experiments(no_of_iterations, max_bond_dim, no_of_sites)
-    save_results(results, filename=f"mps_gate_implementation_results_news_{no_of_sites}sites_{no_of_iterations}iter")
+    save_results(results, filename=f"mps_gate_implementation_results_news_{no_of_sites}sites_{no_of_iterations}iterTest")
