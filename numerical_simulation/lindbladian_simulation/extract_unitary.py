@@ -52,14 +52,14 @@ class ExtractUnitary:
             return tgrid
     
     def save_operator(self, ops):
-        path = Path().resolve().parent / f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators{self.L}sites_{self.num_t}iter_{self.num_segment}segNew.pickle"
+        path = Path().resolve().parent / f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators{self.L}sites_{self.num_t}iter_{self.num_segment}segNewPow.pickle"
         if not os.path.exists(path):
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
         print(f"Operators saved to {path}...")
 
     def step_Lindblad(
-        self, tau, num_segment, num_rep, S_s, M_s, dice
+        self, tau, num_segment, num_rep, S_s, M_s
     ):
         """
         Propagate one step of the dilated jump operator in a batch.
@@ -72,6 +72,7 @@ class ExtractUnitary:
 
         s_contour = self.time_contour(S_s, M_s, isreverse=isreverse)  # discrete s point (85,)
         Ns_contour = s_contour.shape[0] # number of discrete s point 85
+        print(Ns_contour, "number of discrete s point")
         F_contour = np.zeros((Ns_contour), dtype=complex)  # discrete F value
         VF_contour = np.zeros(
             (Ns_contour, 2, 2), dtype=complex
@@ -111,59 +112,49 @@ class ExtractUnitary:
             ZA_dilate[i, Ns:, :] = expZA.conj()
             #--------------------------------------------------------
         operator = np.eye(2 * Ns, dtype=complex)  # initialize the operator as identity
-        for iseg in range(num_segment):
-            if isreverse:  # second order
-                for i in range(int(Ns_contour / 2)):  # left-ordered product
-                    VK = np.kron(VF_contour[i, :, :], psi_A)
-                    operator = np.kron(np.identity(2), eHts) @ VK @ np.diagflat(ZA_dilate[i, :, :]) @ VK.conj().T@ operator
-                for i in range(int(Ns_contour / 2)):  # right-ordered product
-                    VK = np.kron(VF_contour[i + int(Ns_contour / 2), :, :], psi_A)
-                    operator = VK @ np.diagflat(ZA_dilate[i + int(Ns_contour / 2), :, :]) @ VK.conj().T @ np.kron(np.identity(2), eHts.conj().T) @ operator
-            else:  # first order
-                # only #left-ordered product
-                print("is not reverse")
+        identityKron = np.kron(np.identity(2), eHts)
+        identityKronconj = np.kron(np.identity(2), eHts.conj().T)
+  
+        if isreverse:  # second order
+            for i in range(int(Ns_contour / 2)):  # left-ordered product
+                VK = np.kron(VF_contour[i, :, :], psi_A)
+                operator = identityKron @ VK @ np.diagflat(ZA_dilate[i, :, :]) @ VK.conj().T@ operator
+            for i in range(int(Ns_contour / 2)):  # right-ordered product
+                VK = np.kron(VF_contour[i + int(Ns_contour / 2), :, :], psi_A)
+                operator = VK @ np.diagflat(ZA_dilate[i + int(Ns_contour / 2), :, :]) @ VK.conj().T @ identityKronconj @ operator
+        else:  # first order
+            # only #left-ordered product
+            print("is not reverse")
         
-        return operator
+        return np.linalg.matrix_power(operator, num_segment)
 
     def Lindblad_simulation(
-        self, T, num_t, num_segment, num_rep, S_s, M_s,  flip_dice=[]
+        self, T, num_t, num_segment, num_rep, S_s, M_s
     ):
         all_gates = (
             []
-        )  # extract the unitaries here of the full circuit, (e^-iHt/T e^-iKt/T)^T
-
-        H = self.H_op #shape=(16, 16)
-
-        # Simulation parameter
-        tau = T / num_t # T= 80, num_t = 80
-        tau_s = S_s / M_s  # time step for integral discretization tau_s = 0.11580703270444591 S_s = 4.863895373589 M_s = 42
+        )  
+        H = self.H_op
+        tau = T / num_t
+        tau_s = S_s / M_s 
 
         eHtau = la.expm(-1j * tau * H) # e^-iHtau where tau is 1
         self.eHts = la.expm(-1j * tau_s * self.H_op)  # short time Hamiltonian simulation shape=(16, 16)
         self.E_A, self.psi_A = la.eigh(
             self.A_op
         )  
-        # Output Storage
-        time_H = np.zeros(num_t + 1)  # List of total Hamiltonian simulation time zeros [0, 1, 2, ..., 80]
 
         for it in range(num_t):
             print(it, "iteration ")
-
-            time_H[it + 1] = time_H[it] + tau
             ops = self.step_Lindblad(
                 tau,
                 num_segment,
                 num_rep,
                 S_s,
-                M_s,
-                flip_dice[it, :],
+                M_s
             )
             ops = ops @ np.kron(np.identity(2), eHtau)
             all_gates.append(ops)
-
-            time_H[it + 1] = (
-                time_H[it + 1] + 2 * num_segment * S_s
-            )  
 
         self.save_operator(all_gates)
 
