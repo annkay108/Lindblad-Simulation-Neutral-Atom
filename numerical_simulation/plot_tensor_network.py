@@ -4,12 +4,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-DATA_FILE = "data/mps_gate_implementation_results_news_9sites_250iter1measure.json"
+DATA_FILE = "data/mps_gate_implementation_results_news_11sites_250iterPower1measure.json"
 SAVE_PLOTS = True
 PLOT_DIR = "plots"
 # TRUE_ENERGY = -5.4315195827374945
 # TRUE_ENERGY = -6.85018777
-TRUE_ENERGY = -12.52776194
+TRUE_ENERGY = -15.36693524
 
 os.makedirs(PLOT_DIR, exist_ok=True)
 
@@ -39,7 +39,7 @@ plt.xlabel("Iterations")
 plt.ylabel("Energy")
 plt.grid(True)
 plt.legend()
-save(fig, "energy_vs_iterations1_9sites.png")
+save(fig, "energy_vs_iterations1_11sitesMeasure.png")
 plt.show()
 
 

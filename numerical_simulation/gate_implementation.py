@@ -29,13 +29,9 @@ def run_single_experiment(no_of_iterations, max_bond_dim, no_of_sites):
     def circuit():
         ancilla_idx = 0
 
-        for i, U_s in enumerate(dilated_unitary):
-            qml.QubitUnitary(U_s, wires=range(n_qubits))
-            if i % 2 == 1:
-                qml.SWAP(wires=[0, n_qubits + ancilla_idx])
-                ancilla_idx += 1
-            if(ancilla_idx == no_of_iterations):
-                break
+        for i in range(no_of_iterations):
+            qml.QubitUnitary(dilated_unitary[0], wires=range(n_qubits))
+            qml.SWAP(wires=[0, n_qubits + i])
         print("Calculating final energy...")
         return qml.expval(H_total)
 
@@ -59,6 +55,7 @@ def run_experiments(iterations_list, bond_dim_list, no_of_sites):
         for max_bond_dim in bond_dim_list:
             result = run_single_experiment(no_of_iterations, max_bond_dim, no_of_sites)
             results.append(result)
+            print(f"Completed experiment with {no_of_iterations} iterations and max bond dimension {max_bond_dim}. Energy: {result['energy']}, Execution time: {result['execution_time']} seconds.")
     return results
 
 def save_results(results, filename="results"):
@@ -70,13 +67,13 @@ def save_results(results, filename="results"):
     print(f"Results saved to {json_path}...")
 
 if __name__ == "__main__":
-    iterations_list = [80]
-    bond_dim_list = [200]
-    no_of_sites = 9
+    iterations_list = [90]
+    bond_dim_list = [350]
+    no_of_sites = 12
 
     results = run_experiments(iterations_list, bond_dim_list, no_of_sites)
     print(results, "<-- final results")
-    save_results(results, filename="mps_gate_implementation_results9sites_81iter_3seg_200bd_New")
+    save_results(results, filename=f"mps_gate_implementation_results_news_{no_of_sites}sites_{iterations_list[0]}iter_3seg_{bond_dim_list[0]}bdlist")
 
 
     

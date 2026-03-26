@@ -1,0 +1,9 @@
+[
+    {
+        "iterations": 50,
+        "max_bond_dim": 250,
+        "no_of_sites": 11,
+        "execution_time": 1328.8357200622559,
+        "energy": -15.02029862681541
+    }
+]

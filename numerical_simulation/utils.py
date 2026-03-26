@@ -5,8 +5,8 @@ from quspin.operators import hamiltonian  # Hamiltonians and operators
 from pathlib import Path
 
 def load_unitary_matrices():
-    path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators9sites_250iter_3segNew.pickle"
-    # path = Path().resolve().parent / "numerical_simulation/lindbladian_simulation/data/lindblad_operators.pickle"
+    # path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators12sites_1iter_3segNewPow.pickle"
+    path = Path().resolve().parent / "numerical_simulation/lindbladian_simulation/data/lindblad_operators4sites_1iter_3segNewPow.pickle"
     dilated_unitary = np.load(path, allow_pickle=True)
 
     n_qubits = int(np.log2(dilated_unitary[0].shape[0]))

@@ -27,7 +27,7 @@ from lindbladian_simulation.lindblad import LindbladSimulator
 from time import time
 
 ##### define model parameters #####
-L = 7  # system size
+L = 6  # system size
 J = 1.0  # spin zz interaction
 g = 1.2  # z magnetic field strength
 ##### define spin model
@@ -58,7 +58,7 @@ psi_GS = psi_GS.flatten()
 print("E_GS = ", E_GS)
 
 H_mat = np.array(Hamiltonian_quspin.todense())
-print(H_mat.shape, "<-- H_mat shape")
+# print(H_mat.shape, "<-- H_mat shape")
 E_H, psi_H = la.eigh(H_mat) # calculate the full spectrum of H meaning all the eigenvalues and eigenvectors
 # print("E_H = ", E_H)
 
@@ -76,8 +76,8 @@ A = hamiltonian(
 )  # z x 0 x 0 x 0
 
 A_mat = np.array(A.todense()) # 16 x 16
-print(A_mat.shape, "<-- A_mat shape")
-lb = LindbladSimulator(H_mat, A_mat, filter_params)
+# print(A_mat, "<-- A_mat shape")
+lb = LindbladSimulator(H_mat, A_mat, filter_params, L=L)
 
 # random initial state
 np.random.seed(1)
@@ -90,7 +90,7 @@ print("Initial state prepared.", psi0.shape)
 # print("|<psi0|psiGS>| = ", np.abs(np.vdot(psi_GS, psi0)))
 
 # Exact simulation
-T = 80
+T = 200
 num_t = int(T)
 
 # exact_start = time()
@@ -108,12 +108,12 @@ lb.construct_jump_exact()  # construct Jump operator
 
 zero_block = np.zeros_like(lb.A_jump)
 dilated_K = np.block([[zero_block, lb.A_jump.conj().T], [lb.A_jump, zero_block]])
-print(dilated_K.shape, "<-- dilated_K shape")
+# print(dilated_K.shape, "<-- dilated_K shape")
 
 S_s = 5.0 / db  # Integral truncation
 M_s = int(5 / db / (2 * np.pi / (4 * a)))  # Integral stepsize
 
-num_segment = 2  # discrete segment
+num_segment = 3  # discrete segment
 num_rep = 1  # average repetition (used to recover \rho_n after tracing out)
 
 np.random.seed(seed=1)
@@ -123,12 +123,15 @@ flip_dice = np.random.rand(
 
 print("Starting Lindblad simulation...")
 start = time()
+# time_series, avg_energy, avg_pGS, avg_energy_op, avg_pGS_op, time_H, rho_hist, all_gates
 times_l, avg_energy_l, avg_pGS_l, avg_energy_l_op, avg_pGS_l_op, time_H_l, rho_all_l, all_gates = (
     lb.Lindblad_simulation(
         T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS, intorder=2, flip_dice=flip_dice
     )
 )
 end = time()
+
+lb.save_results(time_series=times_l, avg_energy=avg_energy_l, avg_pGS=avg_pGS_l, time_H=time_H_l, num_t=num_t, T=T, num_segment=num_segment, S_s=S_s, M_s=M_s)
 print(f"Lindblad simulation completed in {end - start} seconds.")
 # def save_results(results, filename="results"):
 #     os.makedirs("data", exist_ok=True)

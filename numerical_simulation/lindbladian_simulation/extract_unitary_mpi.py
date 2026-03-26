@@ -1,154 +1,226 @@
-
-
 from functools import reduce
 import numpy as np
 import scipy.linalg as la
-# from scipy.special import erf
 from numpy import pi
 import pickle
 import os
 from pathlib import Path
 from mpi4py import MPI
 
+
 class ExtractUnitary:
+
     def __init__(self, H_op, A_op, filter_params, L, num_segment, num_t):
+
         self.H_op = H_op
         self.A_op = A_op
         self.Ns = H_op.shape[0]
+
         self.filter_a = filter_params["a"]
         self.filter_b = filter_params["b"]
         self.filter_da = filter_params["da"]
         self.filter_db = filter_params["db"]
+
         self.L = L
         self.num_segment = num_segment
         self.num_t = num_t
-    
+
+        # MPI setup
+        self.comm = MPI.COMM_WORLD
+        self.rank = self.comm.Get_rank()
+        self.size = self.comm.Get_size()
+
     def filter_time(self, t):
-        """Define the function for time filtering."""
+
         a = self.filter_a
         b = self.filter_b
         da = self.filter_da
         db = self.filter_db
+
         if np.abs(t) < 1e-10:
-            return (-b +a)/(2.0*pi)
-        else:
-            return(
-                np.exp(-((da* t)**2)/4)*np.exp(1j*a*t) - np.exp(-((db* t)**2)/4)*np.exp(1j*b*t)
-            )/(2.0*pi*1j*t)
-    
-    
+            return (-b + a) / (2.0 * pi)
+
+        return (
+            np.exp(-((da * t) ** 2) / 4) * np.exp(1j * a * t)
+            - np.exp(-((db * t) ** 2) / 4) * np.exp(1j * b * t)
+        ) / (2.0 * pi * 1j * t)
+
     def time_contour(self, S_s, M_s, isreverse=True):
-        """
-        Construct the time contour for propagating the Kraus operator in
-        time domain.
-        2M_s+1 grid points (include s=0)
-        """
+
         tau_s = S_s / M_s
-        tgrid = np.zeros(2 * M_s + 1)
         tgrid = -S_s + np.arange(2 * M_s + 1) * tau_s
 
         if isreverse:
-            return np.append(tgrid, tgrid[::-1])  # reverse
+            return np.append(tgrid, tgrid[::-1])
         else:
             return tgrid
-    
-    def save_operator(self, ops):
-        path = Path().resolve().parent / f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators{self.L}sites_{self.num_t}iter_{self.num_segment}segNewMPI.pickle"
-        if not os.path.exists(path):
-            with open(path, "wb") as f:
-                pickle.dump(ops, f)
-        print(f"Operators saved to {path}...")
 
-    def step_Lindblad(
-        self, tau, num_segment, num_rep, S_s, M_s
-    ):
-        """
-        Propagate one step of the dilated jump operator in a batch.
-        """
-        
-        # Simulation preparation
-        # first order method does not require reversing the grid
+    def save_operator(self, ops):
+
+        if self.rank != 0:
+            return
+
+        path = Path().resolve().parent / \
+            f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators{self.L}sites_{self.num_t}iter_{self.num_segment}segNew.pickle"
+
+        with open(path, "wb") as f:
+            pickle.dump(ops, f)
+
+        print(f"Operators saved to {path}")
+
+    def step_Lindblad(self, tau, num_segment, num_rep, S_s, M_s):
+
         isreverse = True
         tau_s = S_s / M_s
 
-        s_contour = self.time_contour(S_s, M_s, isreverse=isreverse)  # discrete s point (85,)
-        Ns_contour = s_contour.shape[0] # number of discrete s point 85
-        F_contour = np.zeros((Ns_contour), dtype=complex)  # discrete F value
-        VF_contour = np.zeros(
-            (Ns_contour, 2, 2), dtype=complex
-        )  # discrete dilated F value
-        tau_scal = (
-            np.ones(num_rep) * np.sqrt(tau) / num_segment
-        )  # rescaled tau (for discrete Lindblad)
+        s_contour = self.time_contour(S_s, M_s, isreverse=isreverse)
+        Ns_contour = s_contour.shape[0]
+
         eHts = self.eHts
-        E_A = self.E_A  # eigenvalue of A
-        psi_A = self.psi_A  # eigenvector of A shape=(16, 16) each column is an eigenvector of A
-        Ns = self.Ns  # dimension of the system
-        ZA_dilate = np.zeros(
-            (Ns_contour, 2 * Ns, num_rep), dtype=complex
-        )  # local jump operator
-        # for discrete integral point
+        E_A = self.E_A
+        psi_A = self.psi_A
+        Ns = self.Ns
 
-        for i in range(Ns_contour):
-            if (s_contour[i] == np.min(s_contour)) or (
-                s_contour[i] == np.max(s_contour)
-            ):
-                F_contour[i] = (
-                    self.filter_time(s_contour[i]) / 2
-                )  # inverse fourier transformed filter function
+        tau_scal = np.ones(num_rep) * np.sqrt(tau) / num_segment
+
+        # global arrays
+        F_contour = np.zeros(Ns_contour, dtype=np.complex128)
+        VF_contour = np.zeros((Ns_contour, 2, 2), dtype=np.complex128)
+        ZA_dilate = np.zeros((Ns_contour, 2 * Ns, num_rep), dtype=np.complex128)
+
+        # ---------- DISTRIBUTE WORK ----------
+
+        counts = [Ns_contour // self.size + (1 if r < Ns_contour % self.size else 0)
+                  for r in range(self.size)]
+
+        starts = [sum(counts[:r]) for r in range(self.size)]
+
+        local_start = starts[self.rank]
+        local_end = local_start + counts[self.rank]
+        local_n = counts[self.rank]
+
+        local_F = np.zeros(local_n, dtype=np.complex128)
+        local_VF = np.zeros((local_n, 2, 2), dtype=np.complex128)
+        local_ZA = np.zeros((local_n, 2 * Ns, num_rep), dtype=np.complex128)
+
+        smin = np.min(s_contour)
+        smax = np.max(s_contour)
+
+        # ---------- PARALLEL LOOP ----------
+
+        for idx, i in enumerate(range(local_start, local_end)):
+
+            if (s_contour[i] == smin) or (s_contour[i] == smax):
+                local_F[idx] = self.filter_time(s_contour[i]) / 2
             else:
-                F_contour[i] = self.filter_time(s_contour[i])
+                local_F[idx] = self.filter_time(s_contour[i])
 
-            #--------------------------------------------------------
-            fac = np.exp(1j * np.angle(F_contour[i]))
-            VF_contour[i, :, :] = (
-                1.0 / np.sqrt(2) * np.array([[1, 1], [fac, -fac]])
-            )  # eigenvectors of σ_l
+            fac = np.exp(1j * np.angle(local_F[idx]))
+
+            local_VF[idx] = (
+                1.0 / np.sqrt(2)
+                * np.array([[1, 1], [fac, -fac]])
+            )
 
             expZA = np.exp(
-                    -1j * 0.5 * tau_s * np.abs(F_contour[i]) * np.outer(E_A, tau_scal)
-                )
-            ZA_dilate[i, :Ns, :] = expZA  # AK dilated
-            ZA_dilate[i, Ns:, :] = expZA.conj()
-            #--------------------------------------------------------
-        operator = np.eye(2 * Ns, dtype=complex)  # initialize the operator as identity
+                -1j * 0.5 * tau_s *
+                np.abs(local_F[idx]) *
+                np.outer(E_A, tau_scal)
+            )
+
+            local_ZA[idx, :Ns, :] = expZA
+            local_ZA[idx, Ns:, :] = expZA.conj()
+
+        # ---------- GATHER RESULTS ----------
+
+        counts = np.array(counts)
+
+        # gather F
+        recvcounts_F = counts
+        displs_F = np.insert(np.cumsum(recvcounts_F), 0, 0)[0:-1]
+
+        self.comm.Allgatherv(
+            [local_F, MPI.COMPLEX],
+            [F_contour, recvcounts_F, displs_F, MPI.COMPLEX]
+        )
+
+        # gather VF
+        local_VF_flat = local_VF.reshape(-1)
+        VF_contour_flat = VF_contour.reshape(-1)
+
+        recvcounts_VF = counts * 4
+        displs_VF = np.insert(np.cumsum(recvcounts_VF), 0, 0)[0:-1]
+
+        self.comm.Allgatherv(
+            [local_VF_flat, MPI.COMPLEX],
+            [VF_contour_flat, recvcounts_VF, displs_VF, MPI.COMPLEX]
+        )
+
+        # gather ZA
+        local_ZA_flat = local_ZA.reshape(-1)
+        ZA_dilate_flat = ZA_dilate.reshape(-1)
+
+        recvcounts_ZA = counts * (2 * Ns * num_rep)
+        displs_ZA = np.insert(np.cumsum(recvcounts_ZA), 0, 0)[0:-1]
+
+        self.comm.Allgatherv(
+            [local_ZA_flat, MPI.COMPLEX],
+            [ZA_dilate_flat, recvcounts_ZA, displs_ZA, MPI.COMPLEX]
+        )
+
+        # ---------- PROPAGATION ----------
+
+        operator = np.eye(2 * Ns, dtype=np.complex128)
+
         for iseg in range(num_segment):
-            if isreverse:  # second order
-                for i in range(int(Ns_contour / 2)):  # left-ordered product
-                    VK = np.kron(VF_contour[i, :, :], psi_A)
-                    operator = np.kron(np.identity(2), eHts) @ VK @ np.diagflat(ZA_dilate[i, :, :]) @ VK.conj().T@ operator
-                for i in range(int(Ns_contour / 2)):  # right-ordered product
-                    VK = np.kron(VF_contour[i + int(Ns_contour / 2), :, :], psi_A)
-                    operator = VK @ np.diagflat(ZA_dilate[i + int(Ns_contour / 2), :, :]) @ VK.conj().T @ np.kron(np.identity(2), eHts.conj().T) @ operator
-            else:  # first order
-                # only #left-ordered product
-                print("is not reverse")
-        
+
+            if isreverse:
+
+                for i in range(int(Ns_contour / 2)):
+
+                    VK = np.kron(VF_contour[i], psi_A)
+
+                    operator = (
+                        np.kron(np.identity(2), eHts)
+                        @ VK
+                        @ np.diagflat(ZA_dilate[i])
+                        @ VK.conj().T
+                        @ operator
+                    )
+
+                for i in range(int(Ns_contour / 2)):
+
+                    idx = i + int(Ns_contour / 2)
+
+                    VK = np.kron(VF_contour[idx], psi_A)
+
+                    operator = (
+                        VK
+                        @ np.diagflat(ZA_dilate[idx])
+                        @ VK.conj().T
+                        @ np.kron(np.identity(2), eHts.conj().T)
+                        @ operator
+                    )
+
         return operator
 
     def Lindblad_simulation(self, T, num_t, num_segment, num_rep, S_s, M_s):
-        comm = MPI.COMM_WORLD
-        rank = comm.Get_rank()
-        size = comm.Get_size()
+
+        all_gates = []
 
         H = self.H_op
         tau = T / num_t
         tau_s = S_s / M_s
 
         eHtau = la.expm(-1j * tau * H)
-        self.eHts = la.expm(-1j * tau_s * self.H_op)
+        self.eHts = la.expm(-1j * tau_s * H)
 
         self.E_A, self.psi_A = la.eigh(self.A_op)
 
-        # distribute iteration indices
-        iterations = np.arange(num_t)
-        split_iterations = np.array_split(iterations, size)
-        local_iters = comm.scatter(split_iterations, root=0)
+        for it in range(num_t):
 
-        local_gates = []
-
-        for it in local_iters:
-            print(f"Rank {rank} computing iteration {it}")
+            if self.rank == 0:
+                print("Iteration", it)
 
             ops = self.step_Lindblad(
                 tau,
@@ -159,27 +231,9 @@ class ExtractUnitary:
             )
 
             ops = ops @ np.kron(np.identity(2), eHtau)
-            local_gates.append((it, ops))
 
-        # gather results
-        gathered = comm.gather(local_gates, root=0)
+            all_gates.append(ops)
 
-        if rank == 0:
-            all_gates = []
+        self.save_operator(all_gates)
 
-            # flatten results
-            for proc in gathered:
-                all_gates.extend(proc)
-
-            # sort by iteration index
-            all_gates.sort(key=lambda x: x[0])
-
-            # remove indices
-            all_gates = [g[1] for g in all_gates]
-
-            self.save_operator(all_gates)
-
-            return all_gates
-
-        else:
-            return None
+        return all_gates

@@ -8,7 +8,7 @@ from numerial_simulation import ExtractUnitary
 # from lindbladian_simulation.extract_unitary_mpi import ExtractUnitary
 from time import time
 
-L = 8  # system size
+L = 6  # system size
 J = 1.0  # spin zz interaction
 g = 1.2  # z magnetic field strength
 
@@ -83,6 +83,7 @@ avg_energy, avg_pGS, time_series, time_H = (
 end = time()
 print(f"Lindblad simulation completed in {end - start} seconds.")
 
+extraction.save_results(time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s)
 # )
 
 print(avg_energy[-1], "<-- final energy lindblad")

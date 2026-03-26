@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "memray>=1.19.1",
+    "mpi4py>=4.1.1",
     "mqt-core>=3.3.3",
     "mqt-qmap>=3.4.0",
     "numpy>=2.3.4",

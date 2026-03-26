@@ -7,6 +7,7 @@ from numpy import pi
 import pickle
 import os
 from pathlib import Path
+import json
 
 
 class ExtractUnitary:
@@ -60,6 +61,33 @@ class ExtractUnitary:
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
         print(f"Operators saved to {path}...")
+    
+    def save_results(self, time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s):
+
+        save_path = (
+            Path().resolve().parent
+            / f"Lindblad_simulation/numerical_simulation/multiple_jump_operator/data/lindblad_results_multiple_jumps_L{self.L}_T{T}_steps{num_t}.json"
+        )
+
+        data = {
+            "time_series": time_series.tolist(),
+            "avg_energy": avg_energy.tolist(),
+            "avg_pGS": avg_pGS.tolist(),
+            "time_H": time_H.tolist(),
+            "parameters": {
+                "L": self.L,
+                "T": T,
+                "num_t": num_t,
+                "num_segment": num_segment,
+                "S_s": S_s,
+                "M_s": M_s
+            }
+        }
+
+        with open(save_path, "w") as f:
+            json.dump(data, f, indent=4)
+
+        print(f"Results saved to {save_path}")
 
     # def trace_out_ancilla(self, psi_t_batch, dice, num_batch, Ns, psi):
     #     for ir in range(num_batch):  # sampling of the ancillary state

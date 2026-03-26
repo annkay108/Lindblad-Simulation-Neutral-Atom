@@ -4,6 +4,8 @@
 #SBATCH -e ./job_runs/%x_%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
+#SBATCH --clusters=serial
+#SBATCH --partition=serial_long
 
 #SBATCH --time=00:50:00
 

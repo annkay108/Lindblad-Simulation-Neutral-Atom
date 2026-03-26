@@ -6,12 +6,14 @@ from numpy import pi
 import pickle
 import os
 from pathlib import Path
+import json
 
 class LindbladSimulator:
-    def __init__(self, H_op, A_op, filter_params):
+    def __init__(self, H_op, A_op, filter_params, L):
         self.H_op = H_op
         self.A_op = A_op
         self.Ns = H_op.shape[0]
+        self.L = L
         self.filter_a = filter_params["a"]
         self.filter_b = filter_params["b"]
         self.filter_da = filter_params["da"]
@@ -93,9 +95,36 @@ class LindbladSimulator:
         if not os.path.exists(path):
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
+    
+    def save_results(self, time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s):
+
+        save_path = (
+            Path().resolve().parent
+            / f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/single_jumps_data/lindblad_results_single_jumps_L{self.L}_T{T}_steps{num_t}.json"
+        )
+
+        data = {
+            "time_series": time_series.tolist(),
+            "avg_energy": avg_energy.tolist(),
+            "avg_pGS": avg_pGS.tolist(),
+            "time_H": time_H.tolist(),
+            "parameters": {
+                "L": self.L,
+                "T": T,
+                "num_t": num_t,
+                "num_segment": num_segment,
+                "S_s": S_s,
+                "M_s": M_s
+            }
+        }
+
+        with open(save_path, "w") as f:
+            json.dump(data, f, indent=4)
+
+        print(f"Results saved to {save_path}")
 
     def step_Lindblad(
-        self, psi, tau, num_t, num_segment, num_rep, S_s, M_s, dice, intorder
+        self, psi, tau, num_t, num_segment, num_rep, S_s, M_s,  intorder
     ):
         """
         Propagate one step of the dilated jump operator in a batch.
@@ -157,41 +186,42 @@ class LindbladSimulator:
             #--------------------------------------------------------
         # ---start simulation
 
-        psi_t_batch = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
-        psi_t_batch.fill(0j)
-        psi_t_batch[:Ns, :] = psi
+        # psi_t_batch = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
+        # psi_t_batch.fill(0j)
+        # psi_t_batch[:Ns, :] = psi
 
         # psi_t_batch_op = np.zeros((2 * Ns, num_batch), dtype=complex) # 32, 1
         # psi_t_batch_op.fill(0j)
         # psi_t_batch_op[:Ns, :] = psi_op
 
         ops = []  #  extract the unitaries of the circuit here
-        for iseg in range(num_segment):
+        for iseg in range(1):
             if isreverse:  # second order
                 for i in range(int(Ns_contour / 2)):  # left-ordered product
                     VK = np.kron(VF_contour[i, :, :], psi_A)
-                    psi_t_batch = VK.conj().T @ psi_t_batch
+                    # psi_t_batch = VK.conj().T @ psi_t_batch
                     ops.append(VK.conj().T)
                     # pointwise multiplication
-                    psi_t_batch *= ZA_dilate[i, :, :]
+                    # psi_t_batch *= ZA_dilate[i, :, :]
                     ops.append(np.diagflat(ZA_dilate[i, :, :]))
-                    psi_t_batch = VK @ psi_t_batch
+                    # psi_t_batch = VK @ psi_t_batch
                     ops.append(VK)
-                    psi_t_batch = np.kron(np.identity(2), eHt) @ psi_t_batch
+                    # psi_t_batch = np.kron(np.identity(2), eHt) @ psi_t_batch
                     ops.append(np.kron(np.identity(2), eHt))
+                print("Finished left-ordered product. Start right-ordered product...")
                 for i in range(int(Ns_contour / 2)):  # right-ordered product
-                    psi_t_batch = np.kron(np.identity(2), eHt.conj().T) @ psi_t_batch
+                    # psi_t_batch = np.kron(np.identity(2), eHt.conj().T) @ psi_t_batch
                     ops.append(np.kron(np.identity(2), eHt.conj().T))
 
                     VK = np.kron(VF_contour[i + int(Ns_contour / 2), :, :], psi_A)
-                    psi_t_batch = VK.conj().T @ psi_t_batch
+                    # psi_t_batch = VK.conj().T @ psi_t_batch
                     ops.append(VK.conj().T)
 
                     # pointwise multiplication
-                    psi_t_batch *= ZA_dilate[i + int(Ns_contour / 2), :, :]
+                    # psi_t_batch *= ZA_dilate[i + int(Ns_contour / 2), :, :]
                     ops.append(np.diagflat(ZA_dilate[i + int(Ns_contour / 2), :, :]))
 
-                    psi_t_batch = VK @ psi_t_batch
+                    # psi_t_batch = VK @ psi_t_batch
                     ops.append(VK)
             else:  # first order
                 # only #left-ordered product
@@ -223,13 +253,14 @@ class LindbladSimulator:
                     # ops.append(["r"])
 
         overall_matrix_algorithm = reduce(lambda a, b: a @ b, reversed(ops))
+        overall_matrix_algorithm = np.linalg.matrix_power(overall_matrix_algorithm, num_segment)
 
                 # psi_t_batch_op = overall_matrix_algorithm @ psi_t_batch_op
         
-        psi_without_op = self.trace_out_ancilla(psi_t_batch, dice, num_batch, Ns, psi)
+        # psi_without_op = self.trace_out_ancilla(psi_t_batch, dice, num_batch, Ns, psi)
         # psi_all_op = self.trace_out_ancilla(psi_t_batch_op, dice, num_batch, Ns, psi_op)
 
-        return psi_without_op, overall_matrix_algorithm
+        return overall_matrix_algorithm
 
     def Lindblad_simulation(
         self, T, num_t, num_segment, psi0, num_rep, S_s, M_s, psi_GS=[], intorder=2, flip_dice=[]
@@ -298,16 +329,7 @@ class LindbladSimulator:
             # psi_all_ops[:, i] = self.eHT.conj().T @ psi0.copy()
 
         rho_hist[:, :, 0] = np.outer(psi_all[:, 0], psi_all[:, 0].conj().T)
-       
-        for it in range(num_t):
-            print(it, "iteration ")
-            psi_all = eHtau @ psi_all #coherent evolution under H for time tau = 1 last?
-            all_gates.append(np.kron(np.identity(2), eHtau))
-
-            # psi_all_ops = eHtau @ psi_all_ops
-
-            time_H[it + 1] = time_H[it] + tau
-            psi_all, ops = self.step_Lindblad(
+        ops = self.step_Lindblad(
                 psi_all,
                 # psi_all_ops,
                 tau,
@@ -316,10 +338,26 @@ class LindbladSimulator:
                 num_rep,
                 S_s,
                 M_s,
-                flip_dice[it, :],
                 intorder,
             )
-            all_gates.append(ops)
+        ops = ops@ np.kron(np.identity(2), eHtau)
+        all_gates.append(ops)
+        for it in range(num_t):
+            # print(it, "iteration ")
+            # psi_all = eHtau @ psi_all #coherent evolution under H for time tau = 1 last?
+
+            # psi_all_ops = eHtau @ psi_all_ops
+
+            time_H[it + 1] = time_H[it] + tau
+
+            psi_t_batch = np.zeros((2 * Ns, 1), dtype=complex) # 32, 1
+            psi_t_batch.fill(0j)
+            psi_t_batch[:Ns, :] = psi_all
+
+            psi_t_batch = ops @ psi_t_batch
+
+            psi_all = self.trace_out_ancilla(psi_t_batch, flip_dice[it, :], num_rep, Ns, psi_all)
+
             rho_hist[:, :, it + 1] = (
                 np.einsum("in,jn->ij", psi_all, psi_all.conj()) / num_rep
             )  # taking average to get \rho_n

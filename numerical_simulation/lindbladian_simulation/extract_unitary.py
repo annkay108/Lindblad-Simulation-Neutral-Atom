@@ -111,6 +111,9 @@ class ExtractUnitary:
             ZA_dilate[i, :Ns, :] = expZA  # AK dilated
             ZA_dilate[i, Ns:, :] = expZA.conj()
             #--------------------------------------------------------
+
+        print("Finished calculating local jump operators for all discrete integral points. Start constructing global operators...")
+        
         operator = np.eye(2 * Ns, dtype=complex)  # initialize the operator as identity
         identityKron = np.kron(np.identity(2), eHts)
         identityKronconj = np.kron(np.identity(2), eHts.conj().T)
@@ -119,6 +122,7 @@ class ExtractUnitary:
             for i in range(int(Ns_contour / 2)):  # left-ordered product
                 VK = np.kron(VF_contour[i, :, :], psi_A)
                 operator = identityKron @ VK @ np.diagflat(ZA_dilate[i, :, :]) @ VK.conj().T@ operator
+            print("Finished left-ordered product. Start right-ordered product...")
             for i in range(int(Ns_contour / 2)):  # right-ordered product
                 VK = np.kron(VF_contour[i + int(Ns_contour / 2), :, :], psi_A)
                 operator = VK @ np.diagflat(ZA_dilate[i + int(Ns_contour / 2), :, :]) @ VK.conj().T @ identityKronconj @ operator
