@@ -3,9 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+L = 6
+T = 200
 # ---- file paths ----
-file1 = Path().resolve().parent/"Lindblad_simulation/numerical_simulation/multiple_jump_operator/data/lindblad_results_multiple_jumps_L6_T200_steps200.json"
-file2 = Path().resolve().parent/"Lindblad_simulation/numerical_simulation/lindbladian_simulation/single_jumps_data/lindblad_results_single_jumps_L6_T200_steps200.json"
+file1 = Path().resolve().parent/f"Lindblad_simulation/numerical_simulation/multiple_jump_operator/data/lindblad_results_multiple_jumps_L{L}_T{T}_steps{T}.json"
+file2 = Path().resolve().parent/f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/single_jumps_data/lindblad_results_single_jumps_L{L}_T{T}_steps{T}.json"
 
 # ---- load JSON ----
 def load_data(path):
@@ -27,10 +29,14 @@ plt.plot(t2, E2, label="Single jump operator", linestyle="--", linewidth=2)
 
 plt.xlabel("Time")
 plt.ylabel("<E>")
-plt.title("Energy vs Time")
+plt.title(f"Energy vs Time for TFIM-{L}")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+output_dir = Path().resolve().parent/f"Lindblad_simulation/plots"
+energy_path = output_dir / f"Energy_L{L}_T{T}.png"
+plt.savefig(energy_path, dpi=300)
+print(f"Saved energy plot to {energy_path}")
 plt.show()
 
 # ---- Plot Overlap ----
@@ -40,8 +46,11 @@ plt.plot(t2, p2, label="Single jump operator", linestyle="--", linewidth=2)
 
 plt.xlabel("Time")
 plt.ylabel("<pGS>")
-plt.title("Ground State Overlap vs Time")
+plt.title(f"Ground State Overlap vs Time for TFIM-{L}")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+overlap_path = output_dir / f"Overlap_L{L}_T{T}.png"
+plt.savefig(overlap_path, dpi=300)
+print(f"Saved overlap plot to {overlap_path}")
 plt.show()

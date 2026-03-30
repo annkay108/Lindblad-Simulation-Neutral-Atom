@@ -145,7 +145,7 @@ class LindbladSimulator:
             (Ns_contour, 2, 2), dtype=complex
         )  # discrete dilated F value
         tau_scal = (
-            np.ones(num_rep) * np.sqrt(tau) / num_segment
+            np.ones(1) * np.sqrt(tau) / num_segment
         )  # rescaled tau (for discrete Lindblad)
         eHt = self.eHt
         eHT = self.eHT
@@ -153,7 +153,7 @@ class LindbladSimulator:
         psi_A = self.psi_A  # eigenvector of A shape=(16, 16) each column is an eigenvector of A
         Ns = self.Ns  # dimension of the system
         ZA_dilate = np.zeros(
-            (Ns_contour, 2 * Ns, num_rep), dtype=complex
+            (Ns_contour, 2 * Ns, 1), dtype=complex
         )  # local jump operator
         # for discrete integral point
 
@@ -290,7 +290,7 @@ class LindbladSimulator:
         self.E_A, self.psi_A = la.eigh(
             self.A_op
         )  # diagonalize A for later implementation
-        print("Eigenvalues of A: ", self.E_A)
+        
         # Output Storage
         time_H = np.zeros(num_t + 1)  # List of total Hamiltonian simulation time zeros [0, 1, 2, ..., 80]
 
@@ -350,7 +350,7 @@ class LindbladSimulator:
 
             time_H[it + 1] = time_H[it] + tau
 
-            psi_t_batch = np.zeros((2 * Ns, 1), dtype=complex) # 32, 1
+            psi_t_batch = np.zeros((2 * Ns, num_rep), dtype=complex) # 32, 1
             psi_t_batch.fill(0j)
             psi_t_batch[:Ns, :] = psi_all
 
@@ -379,7 +379,7 @@ class LindbladSimulator:
             #     np.abs(np.einsum("in,i->n", psi_all_ops.conj(), psi_GS)) ** 2
             # )  # Calculating overlap
 
-        self.save_operator(all_gates)
+        # self.save_operator(all_gates)
         avg_energy = np.mean(avg_energy_hist, axis=1)
         avg_pGS = np.mean(avg_pGS_hist, axis=1)
 
@@ -387,5 +387,4 @@ class LindbladSimulator:
         avg_pGS_op = []
         # avg_energy_op = np.mean(avg_energy_hist_op, axis=1)
         # avg_pGS_op = np.mean(avg_pGS_hist_op, axis=1)
-        print("Final energy (operator method): ", avg_pGS_hist[3])
         return time_series, avg_energy, avg_pGS, avg_energy_op, avg_pGS_op, time_H, rho_hist, all_gates

@@ -57,7 +57,7 @@ S_s = 5.0 / db  # Integral truncation
 M_s = int(5 / db / (2 * np.pi / (4 * a))) # Integral stepsize
 
 num_segment = 3 # discrete segment
-num_rep = 1  # average repetition (used to recover \rho_n after tracing out)
+num_rep = 80  # average repetition (used to recover \rho_n after tracing out)
 
 np.random.seed(seed=1)
 flip_dice = np.random.rand(
@@ -84,7 +84,6 @@ end = time()
 print(f"Lindblad simulation completed in {end - start} seconds.")
 
 extraction.save_results(time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s)
-# )
 
 print(avg_energy[-1], "<-- final energy lindblad")
 

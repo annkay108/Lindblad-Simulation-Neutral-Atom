@@ -61,8 +61,10 @@ class ExtractUnitary:
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
         print(f"Operators saved to {path}...")
-    
-    def save_results(self, time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s):
+
+    def save_results(
+        self, time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s
+    ):
 
         save_path = (
             Path().resolve().parent
@@ -80,8 +82,8 @@ class ExtractUnitary:
                 "num_t": num_t,
                 "num_segment": num_segment,
                 "S_s": S_s,
-                "M_s": M_s
-            }
+                "M_s": M_s,
+            },
         }
 
         with open(save_path, "w") as f:
@@ -109,16 +111,16 @@ class ExtractUnitary:
         for ir in range(num_batch):
 
             # --- split into 4 sectors ---
-            psi0 = psi_t_batch[0*Ns:1*Ns, ir]
-            psi1 = psi_t_batch[1*Ns:2*Ns, ir]
-            psi2 = psi_t_batch[2*Ns:3*Ns, ir]
-            psi3 = psi_t_batch[3*Ns:4*Ns, ir]
+            psi0 = psi_t_batch[0 * Ns : 1 * Ns, ir]
+            psi1 = psi_t_batch[1 * Ns : 2 * Ns, ir]
+            psi2 = psi_t_batch[2 * Ns : 3 * Ns, ir]
+            psi3 = psi_t_batch[3 * Ns : 4 * Ns, ir]
 
             # --- compute probabilities ---
-            p0 = la.norm(psi0)**2
-            p1 = la.norm(psi1)**2
-            p2 = la.norm(psi2)**2
-            p3 = la.norm(psi3)**2
+            p0 = la.norm(psi0) ** 2
+            p1 = la.norm(psi1) ** 2
+            p2 = la.norm(psi2) ** 2
+            p3 = la.norm(psi3) ** 2
 
             probs = np.array([p0, p1, p2, p3])
             probs /= np.sum(probs)  # normalize (important for stability)
@@ -142,7 +144,8 @@ class ExtractUnitary:
             psi[:, ir] /= la.norm(psi[:, ir])
 
         return psi
-    def step_Lindblad(self, tau, num_segment, num_rep, S_s, M_s):
+
+    def step_Lindblad(self, tau, num_segment, S_s, M_s):
         """
         Propagate one step of the dilated jump operator in a batch.
         """
@@ -161,7 +164,7 @@ class ExtractUnitary:
             (Ns_contour, 4, 4), dtype=complex
         )  # discrete dilated F value
         tau_scal = (
-            np.ones(num_rep) * np.sqrt(tau) / num_segment
+            np.ones(1) * np.sqrt(tau) / num_segment
         )  # rescaled tau (for discrete Lindblad)
         eHts = self.eHts
         E_A = self.E_A  # eigenvalue of A
@@ -170,7 +173,7 @@ class ExtractUnitary:
         )  # eigenvector of A shape=(16, 16) each column is an eigenvector of A
         Ns = self.Ns  # dimension of the system
         ZA_dilate = np.zeros(
-            (Ns_contour, 4 * Ns, num_rep), dtype=complex
+            (Ns_contour, 4 * Ns, 1), dtype=complex
         )  # local jump operator
         # for discrete integral point
 
@@ -285,14 +288,14 @@ class ExtractUnitary:
 
         rho_hist[:, :, 0] = np.outer(psi_all[:, 0], psi_all[:, 0].conj().T)
 
-        ops = self.step_Lindblad(tau, num_segment, num_rep, S_s, M_s)
+        ops = self.step_Lindblad(tau, num_segment, S_s, M_s)
         ops = ops @ np.kron(np.identity(4), eHtau)
 
         for it in range(num_t):
             # print(it, "iteration ")
             time_H[it + 1] = time_H[it] + tau
 
-            psi_full = np.zeros((4 * Ns, 1), dtype=complex)  # 32, 1
+            psi_full = np.zeros((4 * Ns, num_rep), dtype=complex)  # 32, 1
             psi_full.fill(0j)
             psi_full[:Ns, :] = psi_all  # initial state shape=(16, 1)
 
@@ -301,7 +304,9 @@ class ExtractUnitary:
             psi_all = self.trace_out_ancilla(
                 psi_full, flip_dice[it, :], num_rep, Ns, psi_all
             )
-            rho_hist[:, :, it + 1] = np.outer(psi_all[:, 0], psi_all[:, 0].conj().T)
+            rho_hist[:, :, it + 1] = (
+                np.einsum("in,jn->ij", psi_all, psi_all.conj()) / num_rep
+            )
             time_H[it + 1] = time_H[it + 1] + 2 * num_segment * S_s
             avg_energy_hist[it + 1, :] = np.einsum(
                 "in,in->n", psi_all.conj(), H @ psi_all

@@ -114,7 +114,7 @@ S_s = 5.0 / db  # Integral truncation
 M_s = int(5 / db / (2 * np.pi / (4 * a)))  # Integral stepsize
 
 num_segment = 3  # discrete segment
-num_rep = 1  # average repetition (used to recover \rho_n after tracing out)
+num_rep = 80  # average repetition (used to recover \rho_n after tracing out)
 
 np.random.seed(seed=1)
 flip_dice = np.random.rand(
