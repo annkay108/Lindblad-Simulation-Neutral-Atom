@@ -27,7 +27,7 @@ from lindbladian_simulation.lindblad import LindbladSimulator
 from time import time
 
 ##### define model parameters #####
-L = 6  # system size
+L = 4  # system size
 J = 1.0  # spin zz interaction
 g = 1.2  # z magnetic field strength
 ##### define spin model
@@ -90,7 +90,7 @@ print("Initial state prepared.", psi0.shape)
 # print("|<psi0|psiGS>| = ", np.abs(np.vdot(psi_GS, psi0)))
 
 # Exact simulation
-T = 200
+T = 80
 num_t = int(T)
 
 # exact_start = time()
@@ -113,8 +113,8 @@ dilated_K = np.block([[zero_block, lb.A_jump.conj().T], [lb.A_jump, zero_block]]
 S_s = 5.0 / db  # Integral truncation
 M_s = int(5 / db / (2 * np.pi / (4 * a)))  # Integral stepsize
 
-num_segment = 3  # discrete segment
-num_rep = 80  # average repetition (used to recover \rho_n after tracing out)
+num_segment = 1  # discrete segment
+num_rep = 10  # average repetition (used to recover \rho_n after tracing out)
 
 np.random.seed(seed=1)
 flip_dice = np.random.rand(
