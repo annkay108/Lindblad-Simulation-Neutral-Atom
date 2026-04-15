@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "bqskit>=1.2.1",
     "memray>=1.19.1",
     "mpi4py>=4.1.1",
     "mqt-core>=3.3.3",

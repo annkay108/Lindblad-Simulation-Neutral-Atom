@@ -90,11 +90,12 @@ class LindbladSimulator:
             psi[:, ir] /= la.norm(psi[:, ir])
         return psi
     
-    def save_operator(self, ops):
-        path = Path().resolve().parent / "Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators9sites_250iter_3segNew.pickle"
+    def save_operator(self, ops, num_t, num_segment):
+        path = Path().resolve().parent / f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/operator/lindblad_operators{self.L}sites_{num_t}iter_{num_segment}seg.pickle"
         if not os.path.exists(path):
             with open(path, "wb") as f:
                 pickle.dump(ops, f)
+                print(f"Operators saved to {path}...")
     
     def save_results(self, time_series, avg_energy, avg_pGS, time_H, num_t, T, num_segment, S_s, M_s):
 
@@ -379,7 +380,7 @@ class LindbladSimulator:
             #     np.abs(np.einsum("in,i->n", psi_all_ops.conj(), psi_GS)) ** 2
             # )  # Calculating overlap
 
-        # self.save_operator(all_gates)
+        self.save_operator(ops, num_t, num_segment)
         avg_energy = np.mean(avg_energy_hist, axis=1)
         avg_pGS = np.mean(avg_pGS_hist, axis=1)
 

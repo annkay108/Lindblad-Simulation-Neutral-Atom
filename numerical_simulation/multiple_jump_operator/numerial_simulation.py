@@ -55,7 +55,7 @@ class ExtractUnitary:
     def save_operator(self, ops):
         path = (
             Path().resolve().parent
-            / f"Lindblad_simulation/numerical_simulation/lindbladian_simulation/data/lindblad_operators{self.L}sites_{self.num_t}iter_{self.num_segment}segNewPow.pickle"
+            / f"Lindblad_simulation/numerical_simulation/multiple_jump_operator/operator/lindblad_operators{self.L}sites_{self.num_t}iter_{self.num_segment}.pickle"
         )
         if not os.path.exists(path):
             with open(path, "wb") as f:
@@ -90,22 +90,6 @@ class ExtractUnitary:
             json.dump(data, f, indent=4)
 
         print(f"Results saved to {save_path}")
-
-    # def trace_out_ancilla(self, psi_t_batch, dice, num_batch, Ns, psi):
-    #     for ir in range(num_batch):  # sampling of the ancillary state
-    #         prob = la.norm(psi_t_batch[Ns:, ir]) ** 2
-    #         if dice[ir] <= prob:
-    #             # flip the |1>| state
-    #             psi[:, ir] = psi_t_batch[Ns:2*Ns, ir]
-    #         else:
-    #             # keep the |0> state
-    #             psi[:, ir] = psi_t_batch[:Ns, ir]
-
-    #         # psi[:, ir] = psi_t_batch[:Ns, ir]
-
-    #         # normalize
-    #         psi[:, ir] /= la.norm(psi[:, ir])
-    #     return psi
 
     def trace_out_ancilla(self, psi_t_batch, dice, num_batch, Ns, psi):
         for ir in range(num_batch):
@@ -172,7 +156,7 @@ class ExtractUnitary:
             self.psi_A
         )  # eigenvector of A shape=(16, 16) each column is an eigenvector of A
         Ns = self.Ns  # dimension of the system
-        ZA_dilate = np.zeros(
+        ZA_dilate = np.ones(
             (Ns_contour, 4 * Ns, 1), dtype=complex
         )  # local jump operator
         # for discrete integral point
@@ -317,6 +301,6 @@ class ExtractUnitary:
         avg_energy = np.mean(avg_energy_hist, axis=1)
         avg_pGS = np.mean(avg_pGS_hist, axis=1)
 
-        # self.save_operator(all_gates)
+        self.save_operator(ops)
 
         return avg_energy, avg_pGS, time_series, time_H
